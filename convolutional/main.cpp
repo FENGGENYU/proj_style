@@ -21,7 +21,6 @@ IplImage* jiabian(string *filename, int zd)
 	int rows = img.rows;
 	int cols = img.cols;
 	
-	
 	if(image->nChannels==1){
 	if (rows < zd)
 	{
@@ -61,15 +60,10 @@ else{
 		cvReleaseImage(&image);
 		return  imgtemp_1;
 	}
-
 }
-
-
 	return image;
-    
 }
 	
-
 
 int CL(const char *filename){
 
@@ -124,18 +118,12 @@ int level_main(int clan,string *curpath){
 		allimagename[i_0]=imagename;
 	}
 	finimagename.close();
-
-
-
 	
 	for(int i=0;i<imagenum;i++){	
 
 		string imagefile=imagePath+allimagename[i];		
 		//IplImage* image = cvLoadImage( imagefile.c_str(), 0 );  
 		IplImage* image = jiabian(&imagefile, size_hog);
-	
-		  
-
 
 		Vrq **VM[scalenum]; 
 		int scaleorder[scalenum];
@@ -179,7 +167,7 @@ int level_main(int clan,string *curpath){
 			cvReleaseImage(&imagetemp);
 			cvReleaseImage(&czimagetemp);
 
-			cout<<"第"<<iScale<<"个scale"<<endl;
+			cout<<"the "<<iScale<<" scale"<<endl;
 		}
 		finscales.close();
 
@@ -281,7 +269,7 @@ int level_main(int clan,string *curpath){
 				foutimageRept << endl;
 			}
 
-			cout<<"第"<<j<<"个patch"<<endl;
+			cout<<"The "<<j<<" patch"<<endl;
               cvReleaseImage(&patch);
 
 		}
@@ -289,7 +277,7 @@ int level_main(int clan,string *curpath){
 
 		foutimageRept.close();
 		finpatchname.close();
-		cout<<"第"<<i<<"个图片"<<endl;
+		cout<<"The "<<i<<" image"<<endl;
 
 		ifstream finscales1(patchscaleFile);
 		for(int iScale1=0;iScale1<scalenum;iScale1++)
