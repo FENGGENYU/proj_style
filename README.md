@@ -7,7 +7,7 @@ In this repository, we release code for feature encoding and label-constrainted 
 We've provided a mixed models set which contains 30 models of two style in directory 'all_model'.
 Features of all these shapes have already been encoded for simply running our program.
 
-###Installation
+### Installation
 
 MATLAB 2016a and OpenGL should be installed.
 
