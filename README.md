@@ -32,7 +32,7 @@ MATLAB 2016a should be installed.
   
    You can get:
    
-   (d). In the directory 'style_patch', there are images of style patch localization on all shapes .
+   (d). In the directory 'style_patch', there are images which show representative style patch localization on all shapes .
 
 ### License
 
