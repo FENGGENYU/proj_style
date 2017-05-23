@@ -3,7 +3,7 @@ startup;
 startup4style;
 
 vdatapath=fullfile([sPath,'\loop\',num2str(orderdata),'\',num2str(pectlbs*100)]);
-vname=sprintf('VL%d_bestresult',orderdata);
+vname=sprintf('VL%d_result',orderdata);
 vname=fullfile([vdatapath,'\',num2str(viewsN),'\',vname]);
 load(vname);
 patch_num=[803,837,828,790,819,808,781,800,808,774,825,837];
@@ -37,7 +37,7 @@ for iker=view_ii
     for i=1:GK
     patchname=patchName{ikern,1}(sty{ikern,i});
     k2p= k2po{ikern,1}(sty{ikern,i});
-    modelsi=find(labels_best==i);
+    modelsi=find(labels_output==i);
     modelsi=sort(neworder(modelsi));
     
     name=[];
@@ -121,9 +121,15 @@ if export == 1
 %         end
 %     end
 end
-fprintf('output style\n');
-stylename=fullfile([sPath,vPath,'\style']);
-stylename=[stylename,num2str(pectlbs*100),'to',num2str(viewsN),'_2.txt'];
+
+style_patch_path = fullfile(sPath,'style_patch');
+if ~exist(style_patch_path,'dir')
+    mkdir(style_patch_path);
+end
+
+stylename=[style_patch_path,'\style'];
+%stylename=[stylename,num2str(pectlbs*100),'to',num2str(viewsN),'_2.txt'];
+stylename=[stylename,'_index.txt'];
 fstyle=fopen(stylename,'w');
 for i=1:models
     out_style = zeros(1,numb);
@@ -146,6 +152,8 @@ for i=1:models
     fprintf(fstyle,'%s\r\n',pname2);
 end
 fclose(fstyle);
+
+fprintf('output style index file successfully\n');
 
 % fprintf('output style\n');
 % stylename=fullfile([sPath,vPath,'\style']);

@@ -122,7 +122,7 @@ end
 
  posbest=find(puriT==max(puriT));
 if(length(posbest)==1)
-    labels_best=idxKT(:,posbest);
+    labels_output=idxKT(:,posbest);
      if posbest>1
     idxudel=idxudeldel{posbest-1,1};
     sty = stylocff{posbest-1,1};
@@ -134,7 +134,7 @@ if(length(posbest)==1)
      end
 else
     posbest=posbest(2,1);
-    labels_best=idxKT(:,posbest);
+    labels_output=idxKT(:,posbest);
     idxudel=idxudeldel{posbest-1,1};
      sty = stylocff{posbest-1,1};
      styw = styweiff{posbest-1,1};
@@ -145,13 +145,13 @@ for i=1:viewsN
 end
 count=K-count/viewsN;
     
-vname=sprintf('VL%d_bestresult',orderdata);
+vname=sprintf('VL%d_result',orderdata);
 vname=fullfile([vdatapath,'\',num2str(viewsN),'\',vname]);
 if ~exist([vdatapath,'\',num2str(viewsN)],'dir')
     mkdir([vdatapath,'\',num2str(viewsN)],'dir');
 end
 fprintf('final purity of cluster result.---> %2.2f%%\n',puri*100);
-save(vname,'puriT','posbest','param','param_1','labels_best','idxudel','GK','count','XL','Y','G','neworder','sty','styw');
+save(vname,'puriT','posbest','param','param_1','labels_output','idxudel','GK','count','XL','Y','G','neworder','sty','styw');
 %whereisstyle_4;
 %selectview;
 

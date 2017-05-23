@@ -14,10 +14,14 @@ MATLAB 2016a and OpenGL should be installed.
 ### Usage
 
 1. Run Easy_run.m in matlab (Label-constrainted style clustering.). 
-   You can get purity of the clustered result and the location file(.txt) about style patches.
+   You can get:
+   1.Purity of the style clustering result,
+   2.Style clustering result for each model in new output directory 'style_cluster_result'.
+   3.The representative style patch index file(.txt) for all shapes in new output directory 'style patch'.
 
 2. Run back_projection.exe under fold 'Showstyle_exe'. 
-   You can find images which show style patches localization on all shapes in the directory 'style_patch'.
+   You can get:
+   1.Images which show style patches localization on all shapes in the directory 'style_patch'.
 
 ### Results
 
