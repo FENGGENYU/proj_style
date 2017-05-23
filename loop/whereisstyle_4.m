@@ -1,4 +1,4 @@
-%% start up
+%% output style patch index file
 startup;
 startup4style;
 
@@ -6,22 +6,18 @@ vdatapath=fullfile([sPath,'\loop\',num2str(orderdata),'\',num2str(pectlbs*100)])
 vname=sprintf('VL%d_result',orderdata);
 vname=fullfile([vdatapath,'\',num2str(viewsN),'\',vname]);
 load(vname);
-patch_num=[803,837,828,790,819,808,781,800,808,774,825,837];
-% vname=sprintf('VL%d',orderdata);
-% vname=fullfile([vdatapath,'\',vname]);
-% load(vname);
 
 fprintf('whereisstyle\n');
 ikern=0;
 for iker=view_ii
     ikern=ikern+1;
     curpath=fullfile([sPath,vPath,pPath,num2str(iker),'\']);
-    numpatch=patch_num(iker);
-    vname=sprintf('V-%d-%d.mat',numpatch,iker);
-    cname=sprintf('CT-%d-%d.mat',numpatch,iker);
+
+    vname=sprintf('V-%d.mat',iker);
+    cname=sprintf('CT-%d.mat',iker);
     vcurpath=fullfile([path,num2str(orderdata),'\',vname]);
     ccurpath=fullfile([path,num2str(orderdata),'\',cname]);
-    kcurpath=sprintf('kmeans-%d-%d-%d',numpatch,K,iker);
+    kcurpath=sprintf('kmeans-%d-%d',K,iker);
     kcurpath=fullfile([pwd,'\cluster\',num2str(orderdata),'\',kcurpath]);
     load(kcurpath);
     load(vcurpath);

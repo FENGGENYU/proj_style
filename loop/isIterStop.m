@@ -1,5 +1,4 @@
 function isStop = isIterStop(obj, epsilon, iter, maxIter, isFig, minIter)
-% 最小化obj，判断是否结束迭代
 
 isStop = 0;
 

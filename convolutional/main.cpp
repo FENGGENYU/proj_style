@@ -1,4 +1,4 @@
-/* use the ideal of CNN to calculator the images' feature*/
+/* use kernel to convolute the bounding box of all images*/
 
 #include <direct.h>
 #include<iostream>
@@ -10,6 +10,10 @@
 using namespace cv;
 using namespace std;
 
+int view_begin=0;
+int view_end=0;
+string curpath;
+
 IplImage* jiabian(string *filename, int zd)
 {
 	//Mat img = imread(*filename);
@@ -20,6 +24,7 @@ IplImage* jiabian(string *filename, int zd)
 	Mat imgtemp; 
 	int rows = img.rows;
 	int cols = img.cols;
+	
 	
 	if(image->nChannels==1){
 	if (rows < zd)
@@ -60,10 +65,15 @@ else{
 		cvReleaseImage(&image);
 		return  imgtemp_1;
 	}
+
 }
+
+
 	return image;
+    
 }
 	
+
 
 int CL(const char *filename){
 
@@ -92,13 +102,13 @@ int level_main(int clan,string *curpath){
 
 	const int scalenum = 1;
 	
-	string imagePath=*curpath+"\\BMPimages\\";
-	imagePath=imagePath+std::to_string(long double(clan))+"\\";
+	string imagePath=*curpath+"\\BMPImages\\";
+	imagePath=imagePath+std::to_string((clan))+"\\";
 	string patchPath = *curpath+"\\BMPK\\";	
-	       patchPath=patchPath+std::to_string(long double(clan))+"\\ceteridf\\";
+	       patchPath=patchPath+std::to_string((clan))+"\\ceteridf\\";
 	//patchPath=patchPath+"\\ceteridf\\";
 		   string imagenameFile = *curpath + "\\imagesname\\picname";
-	imagenameFile=imagenameFile+std::to_string(long double(clan))+".txt";
+	imagenameFile=imagenameFile+std::to_string((clan))+".txt";
 	int imagenum = CL(imagenameFile.c_str());///
 	string patchnameFile=patchPath+"Apidfpatchname.txt";
 	int patchnum=CL(patchnameFile.c_str());
@@ -118,12 +128,18 @@ int level_main(int clan,string *curpath){
 		allimagename[i_0]=imagename;
 	}
 	finimagename.close();
+
+
+
 	
 	for(int i=0;i<imagenum;i++){	
 
 		string imagefile=imagePath+allimagename[i];		
 		//IplImage* image = cvLoadImage( imagefile.c_str(), 0 );  
 		IplImage* image = jiabian(&imagefile, size_hog);
+	
+		  
+
 
 		Vrq **VM[scalenum]; 
 		int scaleorder[scalenum];
@@ -144,7 +160,7 @@ int level_main(int clan,string *curpath){
 			for(int irows=0;irows<rowsS;irows++){
 				VM[iScale][irows]=new Vrq[colsS];
 			}
-			printf("hello");
+			
 			IplImage* imagetemp = cvCreateImage(image_patch,image->depth,image->nChannels);
 			IplImage* czimagetemp = cvCreateImage(imagetempSize, imagetemp->depth, imagetemp->nChannels);  
 
@@ -167,7 +183,7 @@ int level_main(int clan,string *curpath){
 			cvReleaseImage(&imagetemp);
 			cvReleaseImage(&czimagetemp);
 
-			cout<<"the "<<iScale<<" scale"<<endl;
+			cout<<"The "<<iScale<<" scale"<<endl;
 		}
 		finscales.close();
 
@@ -310,15 +326,36 @@ int level_main(int clan,string *curpath){
 	delete desc;
 	return 0;
 }
-	
+
+void initialize(string params)
+{
+	//initialize parameters
+	if (params.empty())
+	{
+		cout << "please input the parameters file" << endl;
+		cin.get();
+		exit(0);
+	}
+
+	ifstream ifs;
+	ifs.open(params);
+	if (ifs.fail())
+	{
+		cout << "can't open parameters file" << endl;
+	}
+	string tmp;
+	ifs >> tmp >> curpath
+		>> tmp >> view_begin
+		>> tmp >> view_end;
+
+	ifs.close();
+}
+
 void main(){
-	string curpath = "J:\\runwithonebutton\\randpatch\\models\\24";
-	string pathviews = curpath + "\\views.txt";
-	ifstream finviews(pathviews);
-	int views;
-	finviews >> views;
-	finviews.close();
-	for (int i = 1; i <= views; i++)
+	
+	initialize("params.cfg");
+
+	for (int i = view_begin; i <= view_end; i++)
 		level_main(i,&curpath);
 }
 

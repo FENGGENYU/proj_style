@@ -6,30 +6,7 @@ function [Vr, U,Uint,V,Vint, W, numIter,tElapsed,object,alpha] = pslf3(X, Y,etap
 % V=[Vs;Vc]=[[Vsl,Vsul];[Vcl,Vcul]]: nt*ns
 % Vlab=[Vsl1;Vsl2;Vsl3;Vcl]: 3*nst+nct
 % W: (nst*3+nct)*nc
-% Y: nc*nl 
-
-% v1.0
-% Writtern by Yu Jiang
-% 2012.12.20
-
-% v1.1
-% make some optimization
-% 2012.12.24
-
-% v1.2
-% add parameter isSqrt
-% 2013.01.5
-
-% v1.3
-% renamed pslf (sulf2)
-% 2013.03.06
-
-% v2.0
-% major revision
-% 2013.04.17
-
-% need ('../JYLib/basefun/isIterStop');
-% need ('../JYLib/basefun/normalize');
+% Y: nc*nl
 
 tStart=tic;
 
@@ -39,16 +16,16 @@ optionDefault.maxIter = 600;  %800
 optionDefault.minIter = 480; %10
 optionDefault.dis = 1;
 optionDefault.epsilon=1e-3;
-optionDefault.beta = betapra*10^-10; %监督项正则参数1000
-optionDefault.gamma = gammapra; %21范正则参数10
-optionDefault.alpha = 1/nv*ones(1,nv); %各个view权重
-% optionDefault.nctPer = 0.25; %共享topic比例0.1/0.25
-optionDefault.nctPer = etapra; %共享topic比例0.1/0.25
-optionDefault.nt = 50; %总共的topic
+optionDefault.beta = betapra; 
+optionDefault.gamma = gammapra; 
+optionDefault.alpha = 1/nv*ones(1,nv); 
+% optionDefault.nctPer = 0.25; 
+optionDefault.nctPer = etapra; 
+optionDefault.nt = 50; 
 optionDefault.isUNorm =1;
 optionDefault.isXNorm =1;
-optionDefault.isSqrt =1; %必要为1，V是否开根号更新
-optionDefault.typeB = 1; %
+optionDefault.isSqrt =1; 
+optionDefault.typeB = 1; 
 
 if ~exist('option','var')
    option=optionDefault;
@@ -70,11 +47,9 @@ dis = option.dis;
 isSqrt = option.isSqrt;
 typeB = option.typeB;
 
-if isXNorm %对列(每个样本)归一化
+if isXNorm 
     for i = 1:nv
-        %平方和为1，似乎更好
         X{i} = normalize(X{i},0,1);
-        %和为1
     % 	X{i} = normalize(X{i},0,0);
     end
 end
@@ -89,8 +64,9 @@ ns = size(X{1},2);
 nul = ns-nl; % number of unlabel samples
 nct = round(nt*nctPer); % number of common factor
 nst = nt-nct; % number of specific factor 
-% nwf = nst*nv+nct; %叠加后的V的维数
-nwf = size(Y,1); %叠加后的V的维数
+% nwf = nst*nv+nct; 
+nwf = size(Y,1);
+beta = beta*10^-10; 
 
 if ~exist('V','var')
     Vlab=[];
@@ -129,10 +105,8 @@ end
 if ~exist('U','var')
     for i = 1:nv
     	U{i} = rand(nf(i),nt);
-        if isUNorm %对列归一化
-            %和为1，似乎更好
+        if isUNorm 
             U{i} = normalize(U{i},0,0);
-            %平方和为1
             % 	U{i} = normalize(U{i},0,1);
         end
     end
@@ -167,10 +141,8 @@ for j=1:maxIter
    	%% update U
     for i = 1:nv
         U{i} = U{i}.*(max(X{i}*V{i}',eps)./max(U{i}*(V{i}*V{i}'),eps));
-        if isUNorm %对列归一化
-            %和为1，似乎更好
+        if isUNorm 
             U{i} = normalize(U{i},0,0);
-        %   %平方和为1
         % 	U{i} = normalize(U{i},0,1);
         end
         Us{i} = U{i}(:,1:nst);
@@ -178,7 +150,7 @@ for j=1:maxIter
     end
        
     %% update W
-    %21范
+    %21 form
 %     A=inv(Vlab*Vlab'+gamma*D+1e-4*eye(nwf)); 
 %     W = A*Vlab*Y';
     A=inv(Y*Y'+gamma*D+1e-4*eye(nwf)); 
@@ -193,7 +165,7 @@ for j=1:maxIter
 %     d = 0.5./(Wi);
 %     D = diag(d);
 %     clear Wi d    
-    %F范
+    %F form
 %     A=inv(Vlab*Vlab'+gamma*eye(nwf)); 
 %     W = A*Vlab*Y'; 
     
@@ -211,7 +183,7 @@ for j=1:maxIter
 %          Bz = beta*(Vlab+Wf*Y);
 %          Bf = beta*(Vlab+Wz*Y);
     else
-        %W不参与迭代
+        %W not in itera
         B = -beta*W*Y;
         Bz = (abs(B)+B)/2;
         Bf = (abs(B)-B)/2;    
@@ -237,7 +209,7 @@ for j=1:maxIter
     sumUXul=zeros(nct,nul);
     sumUUVul=zeros(nct,nul);
     for i = 1:nv
-        % 更新Vs
+        % update Vs
         Bzs = Bz(1:nst,:);
         Bz(1:nst,:)=[];
         Bfs = Bf(1:nst,:);
@@ -261,14 +233,14 @@ for j=1:maxIter
         
         newVlab=[newVlab;Vsl{i}];
         
-        % 计算更新Vc相关值
+        % update vc
         sumUXl=sumUXl+alpha(i)*Uc{i}'*Xl{i};
         sumUUVl=sumUUVl+alpha(i)*Uc{i}'*U{i}*Vl{i};
         sumUXul=sumUXul+alpha(i)*Uc{i}'*Xul{i};
         sumUUVul=sumUUVul+alpha(i)*Uc{i}'*U{i}*Vul{i};
     end
     
-    % 更新Vc
+    % update Vc
     Bzc = Bz;
     Bfc = Bf;
     
@@ -285,7 +257,7 @@ for j=1:maxIter
     
     Vlab=[newVlab;Vcl];
         
-    %% 计算目标函数   
+    %% objection function  
     objRec(j) = 0;
     for i =1:nv
         V{i}=[Vs{i};Vc];

@@ -1,15 +1,11 @@
 % calculator the images'HOG feature
 startup;
 %%
-for viewsi=1:6
+for viewsi=1:views
     count=0;
     V=[];
     curpath=fullfile([sPath,vPath,pPath,num2str(viewsi),'\']);
-    numpatch=dir(curpath);
-    numpatch={numpatch.isdir};
-    numpatch=cell2mat(numpatch);
-    numpatch=length(find(numpatch==0));
-%     V=zeros(numpatch,1296);     % HOG feature output. the rows of the V is the all patches' number.
+
     for i=1:models
         for j=1:numb
             tPath=sprintf('%d_%d.bmp',i,j);
@@ -30,7 +26,7 @@ for viewsi=1:6
             fprintf('%d\n', count);
         end
     end
-    vname=sprintf('V-%d-%d.mat',numpatch,viewsi);
+    vname=sprintf('V-%d.mat',viewsi);
     vdatapath=fullfile([path,'\',num2str(orderdata)]);
     if ~exist(vdatapath,'dir')
         mkdir(vdatapath,'dir');
@@ -39,5 +35,3 @@ for viewsi=1:6
     save(vname,'V');
      fprintf('%d\n', viewsi);
 end
-
-
