@@ -32,7 +32,8 @@ MATLAB 2016a should be installed.
   
    You can get:
    
-   (d). In the directory 'style_patch', there are images which show representative style patch localization on all shapes .
+   (d). In the directory 'style_patch', there are images which show representative style patch localization on all shapes. 
+   These images are named as 'model index'_'patch index'_'view index'.bmp.
 
 ### License
 
