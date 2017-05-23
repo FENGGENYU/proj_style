@@ -6,6 +6,7 @@ This is a submission code for SIGGRAPH ASIA 2017
 In this repository, we release codes for style patch sampling, feature encoding, label-constrainted style clustering and style patch back projection.
 We've provided a mixed models set which contains 30 models of two kinds of style in directory 'all_model'.
 Projective features of all these shapes have already been calculated for conveniently running our program.
+Both style clustering results and style patches localization for all shapes can be obtained finally.
 
 ### Installation
 
