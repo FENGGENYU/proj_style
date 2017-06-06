@@ -9,10 +9,10 @@ We've provided a mixed models set which contains 30 models of two kinds of style
 
 Projective features of all these shapes have already been calculated for conveniently running our program.
 
+The example style clustering program is run with 30% style labels constrainted.
+
 Both style clustering results and style patches localization for all shapes can be obtained finally.
 
-The example style clustering program is run with 30% style label constrainted.
- 
 ### Installation
 
 MATLAB 2016a should be installed.
