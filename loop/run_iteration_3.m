@@ -30,7 +30,10 @@ KMname=fullfile([sPath,'\cluster\',num2str(orderdata),'\kernelModel.mat']);
 load(KMname);
 kernelModel=kernelModel(view_ii,:);
 
-
+for ikern=1:viewsN
+    patchPath{ikern,1}=[sPath,vPath,bPath,num2str(ikern),'\ceteridf\'];
+    k2po{ikern,1}=importdata(fullfile([patchPath{ikern,1},'..\k2po.txt']));
+end
 %%  start iteration
 for iter=1:iternum
     [Vr, U,Uless,V,Vless, W, numIter,tElapsed,object,alpha] = pslf3(newX,Y,etapra,betapra,gammapra,Uusei,Vusei);
@@ -73,13 +76,13 @@ for iter=1:iternum
         for  sorti=1:GK
             styloctemp=sort(stylelocadelete{treholdi,1}(:,sorti),'descend');
             styloctemp=styloctemp(stylocN);
-            styloc{treholdi,sorti}=find(stylelocadelete{treholdi,1}(:,sorti)>=styloctemp);
-            stywei{treholdi,sorti}=stylelocadelete{treholdi,1}(styloc{treholdi,sorti},sorti);
+            styloc=find(stylelocadelete{treholdi,1}(:,sorti)>=styloctemp);
+            stywei{treholdi,sorti}=k2po{treholdi,1}(styloc);
         end
     end
 
-    stylocff{iter,1}=styloc;
     styweiff{iter,1}=stywei;
+    
     for treholdi=1:viewsN
         for  sorti=1:GK
             loca{treholdi,sorti}=find(shachupatch{treholdi,1}(:,sorti)>trehold(sorti,1));
@@ -90,7 +93,7 @@ for iter=1:iternum
         for uni=1:GK
             idxuse=union(idxuse,loca{treholdi,uni});
         end
-        idxdeltemp=zeros(size(XL{1,view_ii(treholdi)},1)/5,1);
+        idxdeltemp=zeros(size(newX{1,view_ii(treholdi)},1)/5,1);
         idxdeltemp(idxuse,1)=1;
         idxudel{treholdi}=find(idxdeltemp==0);
     end
@@ -106,8 +109,9 @@ for iter=1:iternum
         count=0;
         for i=idxudel{k}'
             newX{k}((i-count-1)*5+1:(i-count)*5,:)=[];
+            kernelModel{k,1}(i-count,:) = [];
+            k2po{k,1}(i-count) =[];
             count=count+1;
-
         end
     end
     for k=1:viewsN
@@ -120,25 +124,36 @@ for iter=1:iternum
     idxudeldel{iter,1}=idxudel;
 end
 
- posbest=find(puriT==max(puriT));
-if(length(posbest)==1)
+%  posbest=find(puriT==max(puriT));
+% if(length(posbest)==1)
+%     labels_output=idxKT(:,posbest);
+%      if posbest>1
+%     idxudel=idxudeldel{posbest-1,1};
+%     sty = stylocff{posbest-1,1};
+%     styw = styweiff{posbest-1,1};
+%      else
+%      idxudel=idxudeldel{posbest,1};
+%       sty = stylocff{posbest,1};
+%       styw = styweiff{posbest,1};
+%      end
+% else
+%     posbest=posbest(2,1);
+%     labels_output=idxKT(:,posbest);
+%     idxudel=idxudeldel{posbest-1,1};
+%      sty = stylocff{posbest-1,1};
+%      styw = styweiff{posbest-1,1};
+% end
+    posbest = 0;
+    for i=1:length(puriT)
+        if(puriT(i) > posbest)
+            posbest = i;
+        end
+    end
     labels_output=idxKT(:,posbest);
-     if posbest>1
-    idxudel=idxudeldel{posbest-1,1};
-    sty = stylocff{posbest-1,1};
-    styw = styweiff{posbest-1,1};
-     else
-     idxudel=idxudeldel{posbest,1};
-      sty = stylocff{posbest,1};
-      styw = styweiff{posbest,1};
-     end
-else
-    posbest=posbest(2,1);
-    labels_output=idxKT(:,posbest);
-    idxudel=idxudeldel{posbest-1,1};
-     sty = stylocff{posbest-1,1};
-     styw = styweiff{posbest-1,1};
-end
+    %idxudel=idxudeldel{posbest,1};
+    %sty = stylocff{posbest,1};
+    styw = styweiff{posbest,1};
+    
 count=0;
 for i=1:viewsN
     count=count+length(idxudel{i});
@@ -151,7 +166,7 @@ if ~exist([vdatapath,'\',num2str(viewsN)],'dir')
     mkdir([vdatapath,'\',num2str(viewsN)],'dir');
 end
 fprintf('final purity of cluster result.---> %2.2f%%\n',puri*100);
-save(vname,'puriT','posbest','param','param_1','labels_output','idxudel','GK','count','XL','Y','G','neworder','sty','styw');
+save(vname,'puriT','posbest','param','param_1','labels_output','GK','count','XL','Y','G','neworder','styw');
 %whereisstyle_4;
 %selectview;
 

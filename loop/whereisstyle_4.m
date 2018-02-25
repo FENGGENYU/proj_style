@@ -24,15 +24,15 @@ for iker=view_ii
     load(ccurpath);
     
     patchPath{ikern,1}=[sPath,vPath,bPath,num2str(iker),'\ceteridf\'];
-    patchName{ikern,1}=importdata(fullfile(patchPath{iker,1},'\Apidfpatchname.txt'));
-    k2po{ikern,1}=importdata(fullfile([patchPath{iker,1},'..\k2po.txt']));
-     Name{ikern,1}=[];
+    %patchName{ikern,1}=importdata(fullfile(patchPath{iker,1},'\Apidfpatchname.txt'));
+    %k2po{ikern,1}=importdata(fullfile([patchPath{iker,1},'..\k2po.txt']));
+    Name{ikern,1}=[];
 %      k2p=k2po{iker,1};
 %     patchname=patchName{iker,1} ;
     nameT=[];
     for i=1:GK
-    patchname=patchName{ikern,1}(sty{ikern,i});
-    k2p= k2po{ikern,1}(sty{ikern,i});
+    %patchname=patchName{ikern,1}(sty{ikern,i});
+    k2p= styw{ikern,i};
     modelsi=find(labels_output==i);
     modelsi=sort(neworder(modelsi));
     
@@ -63,26 +63,26 @@ for iker=view_ii
     Name{ikern,1}=union(Name{ikern,1},nameT);
 end
 
-if export == 1
-    %
-    for i=1:viewsN                  %% export the result of kernel
-        newPath=fullfile([patchPath{i,1},'..\filter']);
-        newPath=[newPath,num2str(pectlbs*100),'to',num2str(viewsN)];
-        if ~exist(newPath,'dir')
-            mkdir(newPath,'dir')
-        end
-
-        usefulpatchperview=patchName{i,1};
-        usefulpatchperview(idxudel{i})=[];
-        for j=1:length(usefulpatchperview)
-
-            imPathnew=strcat([newPath,'\',usefulpatchperview{j}]);
-            imPathsoure=strcat([patchPath{i,1},usefulpatchperview{j}]);
-            pic=imread(imPathsoure);
-            imwrite(pic, imPathnew, 'bmp');
-        end
-    end
-
+% if export == 1
+%     %
+%     for i=1:viewsN                  %% export the result of kernel
+%         newPath=fullfile([patchPath{i,1},'..\filter']);
+%         newPath=[newPath,num2str(pectlbs*100),'to',num2str(viewsN)];
+%         if ~exist(newPath,'dir')
+%             mkdir(newPath,'dir')
+%         end
+% 
+%         usefulpatchperview=patchName{i,1};
+%         usefulpatchperview(idxudel{i})=[];
+%         for j=1:length(usefulpatchperview)
+% 
+%             imPathnew=strcat([newPath,'\',usefulpatchperview{j}]);
+%             imPathsoure=strcat([patchPath{i,1},usefulpatchperview{j}]);
+%             pic=imread(imPathsoure);
+%             imwrite(pic, imPathnew, 'bmp');
+%         end
+%     end
+% end
 %     for i=1:GK              %% export the cluster result
 %         newPath=[imagePath,'\',num2str(pectlbs*100),'to',num2str(viewsN),'\'];
 %         if ~exist(newPath,'dir')
@@ -116,7 +116,7 @@ if export == 1
 %             Name{i,1}=union(Name{i,1},name);
 %         end
 %     end
-end
+
 
 style_patch_path = fullfile(sPath,'style_patch');
 if ~exist(style_patch_path,'dir')

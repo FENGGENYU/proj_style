@@ -7,7 +7,7 @@ min_th = 0;
 viewsN=12;                       % the number of the view choose by user
 view_ii = [1:12];               % the view's order number choose by user
 
-iternum=1;                      % iteration number                   
+iternum=2;                      % iteration number                   
 param=0.05;                     % ¦Ì£¬parameter of fliter the kernel
 param_1=5;                      % parameter of the best reasonable kernel number (scales:2.5-3.5)
 param_2=2;             %2         % parameter of the export style number                  (sacale:viewsN/2-viewsN)
