@@ -1099,10 +1099,10 @@ GLvoid glmDelete(GLMmodel * model)
 
 	if(model->seeds)
 		free(model->seeds);
-	if(model->iscolored)
-		delete []model->iscolored;
+	/*if(model->iscolored)
+		free(model->iscolored);*/
 	if(model->isstyle)
-		delete[] model->isstyle;
+		delete(model->isstyle);
 
 	free(model->materials);
 	while (model->groups) {
@@ -1556,9 +1556,6 @@ GLvoid glmSetLabel(GLMmodel * model, int tag)
 */
 GLvoid glmDraw(GLMmodel * model, GLuint mode)
 {
-	if (!model->isstyle[model->seed_current])
-		return;
-
 	static GLuint i;
 	static GLMgroup *group;
 	static GLMtriangle *triangle;
@@ -1566,7 +1563,8 @@ GLvoid glmDraw(GLMmodel * model, GLuint mode)
 
 	assert(model);
 	assert(model->vertices);
-	/*
+
+	cout << model->seed_current <<"yes" << endl;
 	glTranslatef(model->seeds[model->seed_current * 3 + 0],
 		model->seeds[model->seed_current * 3 + 1],
 		model->seeds[model->seed_current * 3 + 2]);
@@ -1576,23 +1574,16 @@ GLvoid glmDraw(GLMmodel * model, GLuint mode)
 
 	glTranslatef(-model->seeds[model->seed_current * 3 + 0],
 		-model->seeds[model->seed_current * 3 + 1],
-		-model->seeds[model->seed_current * 3 + 2]);*/
+		-model->seeds[model->seed_current * 3 + 2]);
 
 	for (int i = 0; i < model->numtriangles; i++)
 	{
 		glBegin(GL_TRIANGLES);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 		//cout << "color size is" << _msize(model->iscolored)/sizeof(bool);
-
-		if (model->iscolored[model->seed_current * model->numtriangles + i] == false)
-		{
-			glColor3f(0.71f, 0.71f, 0.71f);
-		}
-		else
-		{
-			glColor3f(0.0f, 0.0f, 8.0f);
-			//glColor3f(0.71f, 0.71f, 0.71f);
-		}
+		
+		glColor3f(0.71f, 0.71f, 0.71f);
+		
 
 		int ifindex = model->triangles[i].findex;
 		glNormal3f(model->facetnorms[3 * ifindex], model->facetnorms[3 * ifindex + 1], model->facetnorms[3 * ifindex + 2]);

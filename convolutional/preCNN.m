@@ -1,74 +1,52 @@
-startup;
-curpath=fullfile([sPath,vPath]);
-curpathtxt=fullfile([curpath,'txt\']);
-if ~exist(curpathtxt,'dir')
-    mkdir(curpathtxt,'dir');
-end
-curpathimage=fullfile([curpath,'imagesname\']);
-if ~exist(curpathimage,'dir')
-    mkdir(curpathimage,'dir');
-end
-for i=1:views
-    txtname=sprintf('picname%d.txt',i);
-    fid=fopen([curpathtxt,txtname],'w');
-    if(i~=views)
-        for j=1:Nt
-            
-            
-            if(mod(j,views)==i)
-                tempname=sprintf('%d.bmp',j);
-                
-                fprintf(fid,'%s.txt\r\n',  tempname(1:end-4));
-            end
-        end
-    else
-        for j=1:Nt
-            if(mod(j,views)==0)
-                tempname=sprintf('%d.bmp',j);
-                fprintf(fid,'%s.txt\r\n',  tempname(1:end-4));
-            end
-        end
+function []=preCNN(views,txt_Path,imgname_Path,Nt)
+    fprintf('start preCNN\n');
+    if ~exist(txt_Path,'dir')
+        mkdir(txt_Path,'dir');
     end
-    fclose(fid);
-    fprintf('%d\n', i);
-end
+
+    if ~exist(imgname_Path,'dir')
+        mkdir(imgname_Path,'dir');
+    end
+
+    for i=1:views
+        fid=fopen(fullfile(txt_Path,sprintf('picname%d.txt',i)),'w');
+        if(i~=views)
+            for j=1:Nt
+                if(mod(j,views)==i)
+                    fprintf(fid,'%d.txt\r\n',j);
+                end
+            end
+        else
+            for j=1:Nt
+                if(mod(j,views)==0)
+                    fprintf(fid,'%d.txt\r\n',j);
+                end
+            end
+        end
+        fclose(fid);
+        fprintf('%d\n', i);
+    end
 
 
-for i=1:views
-    txtname=sprintf('picname%d.txt',i);
-    fid=fopen([curpathimage,txtname],'w');
-    dirname=fullfile([curpath,imPath,num2str(i)]);
-    if ~exist(dirname,'dir')
-        mkdir(dirname,'dir');
-    end
-    if(i~=views)
-        for j=1:Nt
-            if(mod(j,views)==i)
-                tempname=sprintf('%d.bmp',j);
-                imPathsoure=fullfile([curpath,imPath,tempname]);
-                imPathnew=strcat([dirname,'\',tempname]);
-                
-                pic=imread(imPathsoure);
-                imwrite(pic, imPathnew, 'bmp');
-                fprintf(fid,'%s\r\n',  tempname);
+    for i=1:views
+        fid=fopen(fullfile(imgname_Path,sprintf('picname%d.txt',i)),'w');
+        if(i~=views)
+            for j=1:Nt
+                if(mod(j,views)==i)
+                    tempname=sprintf('%d.bmp',j);
+                    fprintf(fid,'%s\r\n',tempname);
+                end
+            end
+        else
+            for j=1:Nt
+                if(mod(j,views)==0)
+                    tempname=sprintf('%d.bmp',j);
+                    fprintf(fid,'%s\r\n',  tempname);
+                end
             end
         end
-    else
-        for j=1:Nt
-            
-            
-            if(mod(j,views)==0)
-                tempname=sprintf('%d.bmp',j);
-                imPathsoure=fullfile([curpath,imPath,tempname]);
-                imPathnew=strcat([dirname,'\',tempname]);
-                
-                pic=imread(imPathsoure);
-                imwrite(pic, imPathnew, 'bmp');
-                fprintf(fid,'%s\r\n',  tempname);
-            end
-            
-        end
+        fclose(fid);
+        fprintf('%d\n', i);
     end
-    fclose(fid);
-    fprintf('%d\n', i);
+    fprintf('finish preCNN\n');
 end

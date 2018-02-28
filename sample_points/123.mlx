@@ -1,0 +1,9 @@
+<!DOCTYPE FilterScript>
+<FilterScript>
+ <filter name="Montecarlo Sampling">
+  <Param type="RichInt" value="30" name="SampleNum" tooltip="The desired number of samples. It can be smaller or larger than the mesh size, and according to the choosed sampling strategy it will try to adapt." description="Number of samples"/>
+  <Param type="RichBool" value="false" name="Weighted" tooltip="Use per vertex quality to drive the vertex sampling. The number of samples falling in each face is proportional to the face area multiplied by the average quality of the face vertices." description="Quality Weighted Sampling"/>
+  <Param type="RichBool" value="true" name="ExactNum" tooltip="If the required total number of samples is not a strict exact requirement we can exploit a different algorithmbased on the choice of the number of samples inside each triangle by a random Poisson-distributed number with mean equal to the expected number of samples times the area of the triangle over the surface of the whole mesh." description="Exact Sample Num"/>
+  <Param type="RichBool" value="true" name="EdgeSampling" tooltip="Restrict the sampling process to the crease edges only. Useful to sample in a more accurate way the feature edges of a mechanical mesh." description="Sample CreaseEdge Only"/>
+ </filter>
+</FilterScript>

@@ -1,35 +1,38 @@
-%% start up
+%% start up parameters
 clear;
 K=50;    % kmeans's cluster NO.
-orderdata=24;
-models=30;
+dataname='hu_building';
+run_demo=0;
+
 %% add path
-vPath='\randpatch\models\';
-vPath=fullfile([vPath,num2str(orderdata),'\']);
-sPath=pwd;
-imPath='BMPImages\';
-pPath='BMPpatch\';
-bPath='BMPK\';
-path=fullfile([pwd,'\hogfeature\']);
-numb=30; %patch num?
+Data_Path='data';
+Data_Path=fullfile(Data_Path,dataname);
+lines_Path=fullfile(Data_Path,'3dlines');
+patch_Path=fullfile(Data_Path,'patch');
+kernel_Path=fullfile(Data_Path,'kernel');
+HOG_Path=fullfile(Data_Path,'hog');
+cluster_Path=fullfile(Data_Path,'cluster');
+txt_Path=fullfile(Data_Path,'txt');
+imgname_Path=fullfile(Data_Path,'imagesname');
+pslf_Path=fullfile(Data_Path,'pslf');
+label_Path=fullfile(Data_Path,'labels.mat');
+stylepatch_Path=fullfile(Data_Path,'style_patch');
+
+%% feature parameters
+sample_size=30;
 views=12;
-
-prsize = 48;          % 'cause we have two different size image, we have to resize them to a common size
 pcsize = 48;   %  to accomplish  the calculator of the images HOG .
-if ~exist([sPath,vPath,'\nscale.txt'],'file')
-fnscales=fopen([sPath,vPath,'nscale.txt'],'w');
-fprintf(fnscales,'%d\r\n',  prsize);
-fclose(fnscales);
-end
 
-if ~exist([sPath,vPath,'\views.txt'],'file')
-fviews=fopen([sPath,vPath,'views.txt'],'w');
-fprintf(fviews,'%d\r\n',  views);
-fclose(fviews);
-end
-    
+%% set the percent of the semi-supervised
+pectlbs=1;
+label_or_constraint=0;
 
-
+%% calculate number of shapes
+FILES_TO_PROCESS        = '*.bmp';
+IMGS = dir(fullfile(lines_Path, FILES_TO_PROCESS));
+IMGS = {IMGS.name};
+Nt=length(IMGS);
+models = Nt/views;
  
 
 

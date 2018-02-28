@@ -1,34 +1,22 @@
 % pre-select patches
+function []=run_cluster(views,K,HOG_Path,cluster_Path)
+    fprintf('start run cluster\n');
+    if ~exist(cluster_Path,'dir')
+        mkdir(cluster_Path);
+    end
 
-startup;
-%%
-for viewsi=1:views
-    
-    curpath=fullfile([sPath,vPath,pPath,num2str(viewsi),'\']);
-    vname=sprintf('V-%d.mat',viewsi);
-    vcurpath=fullfile([path,num2str(orderdata),'\',vname]);
-    load(vcurpath);
-%     tic;
-    parpool('local',4);
-    p=gcp('nocreate');
-    opts=statset('UseParallel','always');
-    [idxk,ceter]=kmeans(V,K,'Options',opts,'emptyaction','drop');
-    delete(p);
-%     toc;
-    pos=find(isnan(ceter(:,1)));
-    
-    newceter=ceter;
-    for i=1:length(pos)
-        
-        newceter(pos(i),:)=0;
-        
+    for viewsi=1:views
+        vcurpath=fullfile(HOG_Path,sprintf('V-%d.mat',viewsi));
+        load(vcurpath);
+        [idxk,ceter]=kmeans(V,K,'emptyaction','drop');
+        pos=find(isnan(ceter(:,1)));
+        newceter=ceter;
+        for i=1:length(pos)       
+            newceter(pos(i),:)=0;
+        end
+        vdatapath=fullfile(cluster_Path,sprintf('kmeans-%d-%d.mat',K,viewsi));
+        save(vdatapath,'idxk','ceter','pos','newceter');
+        fprintf('%d\n', viewsi);
     end
-    vname=sprintf('kmeans-%d-%d.mat',K,viewsi);
-     vdatapath=fullfile([sPath,'\cluster\',num2str(orderdata)]);
-    if ~exist(vdatapath,'dir')
-        mkdir(vdatapath,'dir');
-    end
-    vname=fullfile([vdatapath,'\',vname]);
-    save(vname,'idxk','ceter','pos','newceter');
-     fprintf('%d\n', viewsi);
+    fprintf('finish run cluster\n');
 end

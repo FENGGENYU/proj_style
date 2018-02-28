@@ -7,67 +7,71 @@
 #include<omp.h>
 #include<vector>
 #include <opencv2/opencv.hpp>
+#include <math.h>
 using namespace cv;
 using namespace std;
 
 int view_begin=0;
 int view_end=0;
 string curpath;
+string user_name;
+string user_name_File;
+string order_data;
 
-IplImage* jiabian(string *filename, int zd)
+IplImage* jiabian(IplImage* image, int zd)
 {
 	//Mat img = imread(*filename);
-	IplImage* image = cvLoadImage( filename->c_str(), 0 ); 
+	//IplImage* image = cvLoadImage( filename->c_str(), 0 ); 
 	
 	int flag=0;	
-	Mat img(image,0); ; 
+	Mat img(image,0);
 	Mat imgtemp; 
 	int rows = img.rows;
 	int cols = img.cols;
 	
-	
+
 	if(image->nChannels==1){
-	if (rows < zd)
-	{
-		copyMakeBorder(img, imgtemp, 0, zd - rows, 0, 0, BORDER_CONSTANT, Scalar(255));
-		CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
-		IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
-	    cvCopy(&IplImage(imgtemp),imgtemp_1);
-		cvReleaseImage(&image);
-		return  imgtemp_1;
-	}
-	if (cols < zd)
-	{
-		copyMakeBorder(img, imgtemp, 0, 0, 0, zd-cols, BORDER_CONSTANT, Scalar(255));
-		CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
-		IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
-	    cvCopy(&IplImage(imgtemp),imgtemp_1);
-		cvReleaseImage(&image);
-		return  imgtemp_1;
-	}
-}
-else{
-	if (rows < zd)
-	{
-		copyMakeBorder(img, imgtemp, 0, zd - rows, 0, 0, BORDER_CONSTANT, Scalar(255,255,255));
-		CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
-		IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
-	    cvCopy(&IplImage(imgtemp),imgtemp_1);
-		cvReleaseImage(&image);
-		return  imgtemp_1;
-	}
-	if (cols < zd)
-	{
-		copyMakeBorder(img, imgtemp, 0, 0, 0, zd-cols, BORDER_CONSTANT,  Scalar(255,255,255));
-		CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
-		IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
-	    cvCopy(&IplImage(imgtemp),imgtemp_1);
-		cvReleaseImage(&image);
-		return  imgtemp_1;
-	}
 
-}
+		if (rows < zd)
+		{
+			copyMakeBorder(img, imgtemp, 0, zd - rows, 0, 0, BORDER_CONSTANT, Scalar(255));
+			CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
+			IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
+			cvCopy(&IplImage(imgtemp),imgtemp_1);
+			cvReleaseImage(&image);
+			return  imgtemp_1;
+		}
+		if (cols < zd)
+		{
+			copyMakeBorder(img, imgtemp, 0, 0, 0, zd-cols, BORDER_CONSTANT, Scalar(255));
+			CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
+			IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
+			cvCopy(&IplImage(imgtemp),imgtemp_1);
+			cvReleaseImage(&image);
+			return  imgtemp_1;
+		}
+	}
+	else{
+		if (rows < zd)
+		{
+			copyMakeBorder(img, imgtemp, 0, zd - rows, 0, 0, BORDER_CONSTANT, Scalar(255,255,255));
+			CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
+			IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
+			cvCopy(&IplImage(imgtemp),imgtemp_1);
+			cvReleaseImage(&image);
+			return  imgtemp_1;
+		}
+		if (cols < zd)
+		{
+			copyMakeBorder(img, imgtemp, 0, 0, 0, zd-cols, BORDER_CONSTANT,  Scalar(255,255,255));
+			CvSize imgsize=cvSize(imgtemp.cols,imgtemp.rows);
+			IplImage* imgtemp_1=cvCreateImage(imgsize, image->depth, image->nChannels); 
+			cvCopy(&IplImage(imgtemp),imgtemp_1);
+			cvReleaseImage(&image);
+			return  imgtemp_1;
+		}
 
+	}
 
 	return image;
     
@@ -76,15 +80,14 @@ else{
 
 
 int CL(const char *filename){
-
+	cout <<"CL"<<endl;
 	ifstream ReadFile;
 	int n=0;
-	char line[512];
 	string temp;
 	ReadFile.open(filename,ios::in);
 	if(ReadFile.fail())
 	{
-	
+	    ReadFile.close();
 		return 0;
 	}else
 	{
@@ -93,31 +96,28 @@ int CL(const char *filename){
 		
 			n++;
 		}
+		ReadFile.close();
 		return n;
 	}
-	ReadFile.close();
 }
 typedef vector<float>* Vrq;
 int level_main(int clan,string *curpath){
 
-	const int scalenum = 1;
-	
-	string imagePath=*curpath+"\\BMPImages\\";
-	imagePath=imagePath+std::to_string((clan))+"\\";
-	string patchPath = *curpath+"\\BMPK\\";	
-	       patchPath=patchPath+std::to_string((clan))+"\\ceteridf\\";
-	//patchPath=patchPath+"\\ceteridf\\";
-		   string imagenameFile = *curpath + "\\imagesname\\picname";
-	imagenameFile=imagenameFile+std::to_string((clan))+".txt";
-	int imagenum = CL(imagenameFile.c_str());///
+	string imagePath = *curpath + "\\3dlines\\";
+
+	string imagenameFile = *curpath + "\\imagesname\\picname";
+	imagenameFile=imagenameFile+std::to_string(long double(clan))+".txt";
+	int imagenum = CL(imagenameFile.c_str());
+
+	string patchPath = *curpath+"\\kernel\\"+std::to_string((long double)clan)+"\\";
 	string patchnameFile=patchPath+"Apidfpatchname.txt";
 	int patchnum=CL(patchnameFile.c_str());
-	string patchscaleFile = *curpath + "\\nscale.txt";
-	ifstream finscaleshog(patchscaleFile);
-	int size_hog;
-    finscaleshog >> size_hog;
-	finscaleshog.close();
+
+	int size_hog=48;
+
 	HOGDescriptor *desc=new HOGDescriptor(cvSize(size_hog,size_hog),cvSize(16,16),cvSize(8,8),cvSize(8,8),9);
+
+	int step=1;
 
 	ifstream finimagename(imagenameFile);
 	vector<string>allimagename(imagenum);
@@ -128,66 +128,48 @@ int level_main(int clan,string *curpath){
 		allimagename[i_0]=imagename;
 	}
 	finimagename.close();
-
-
-
+	
 	
 	for(int i=0;i<imagenum;i++){	
 
-		string imagefile=imagePath+allimagename[i];		
-		//IplImage* image = cvLoadImage( imagefile.c_str(), 0 );  
-		IplImage* image = jiabian(&imagefile, size_hog);
-	
-		  
-
-
-		Vrq **VM[scalenum]; 
-		int scaleorder[scalenum];
-
 		clock_t t1 = clock();
 
-		ifstream finscales(patchscaleFile);			
-		for(int iScale=0;iScale<scalenum;iScale++){
+		string imagefile=imagePath+allimagename[i];		
+		IplImage* image_original = cvLoadImage( imagefile.c_str(), 0 ); 
+		cout<<imagefile<<endl;
+        //calculate hog for all areas
+		
+		CvSize image_patch= cvSize(size_hog,size_hog);
+		IplImage* image = jiabian(image_original, size_hog);
 
-			int sc;
-			finscales>>sc;
-			scaleorder[iScale]=sc;
-			CvSize image_patch= cvSize(sc,sc);
-			CvSize imagetempSize=cvSize(size_hog,size_hog);
-			int rowsS=image->height-sc+1;
-			int colsS=image->width-sc+1;
-			VM[iScale]=new Vrq*[rowsS];
-			for(int irows=0;irows<rowsS;irows++){
-				VM[iScale][irows]=new Vrq[colsS];
-			}
-			
-			IplImage* imagetemp = cvCreateImage(image_patch,image->depth,image->nChannels);
-			IplImage* czimagetemp = cvCreateImage(imagetempSize, imagetemp->depth, imagetemp->nChannels);  
+		int rows=image->height-size_hog+1;
+		int cols=image->width-size_hog+1;
 
-			for (int m = 0; m < rowsS; m++)
-			{
-				for (int n = 0; n < colsS; n++)
-				{	
-					cvSetImageROI(image,cvRect(n,m,image_patch.width, image_patch.height));
-					cvCopy(image,imagetemp);
-					cvResetImageROI(image);
-					cvResize(imagetemp, czimagetemp, CV_INTER_AREA);
+		Vrq **VM=new Vrq*[rows];
 
-					vector<float>*czimagetempHOG = new vector<float>;				  
-					desc->compute(czimagetemp,*czimagetempHOG);
-					VM[iScale][m][n]=czimagetempHOG;
-
-				}
-			}
-
-			cvReleaseImage(&imagetemp);
-			cvReleaseImage(&czimagetemp);
-
-			cout<<"The "<<iScale<<" scale"<<endl;
+		for(int irows=0;irows<rows;irows++){
+			VM[irows]=new Vrq[cols];
 		}
-		finscales.close();
+		
+		IplImage* imagetemp = cvCreateImage(image_patch,image->depth,image->nChannels);
+		for (int m = 0; m < rows; m+=step)
+		{
+			for (int n = 0; n < cols; n+=step)
+			{	
+				cvSetImageROI(image,cvRect(n,m,image_patch.width, image_patch.height));
+				cvCopy(image,imagetemp);
+				cvResetImageROI(image);
+					
+				vector<float>*czimagetempHOG = new vector<float>;				  
+				desc->compute(imagetemp,*czimagetempHOG);
+				VM[m][n]=czimagetempHOG;
 
+			}
+		}
 
+		cvReleaseImage(&image);
+		cvReleaseImage(&imagetemp);
+		cout<<"done"<<endl;
 
 		string imageRept=imagefile.substr(0,imagefile.length()-4);
 		ofstream foutimageRept(imageRept+".txt");
@@ -199,72 +181,48 @@ int level_main(int clan,string *curpath){
 			string patchfile=patchPath+patchname;		    
 			IplImage* patch = cvLoadImage( patchfile.c_str(), 0 );
 
-
-
-
-
-			CvSize czpatchSize=cvSize(size_hog,size_hog);		    
-			IplImage* czpatch = cvCreateImage(czpatchSize, patch->depth, patch->nChannels);  
-			cvResize(patch, czpatch, CV_INTER_AREA); 
 			vector<float>czpathHOG;
-			desc->compute(czpatch,czpathHOG);
-
-			int rows=image->height-patch->height+1;
-			int cols=image->width-patch->width+1;  
+			desc->compute(patch,czpathHOG);
 
 			float **ConV=new float*[rows];
 			for(int k=0;k<rows;k++)
-				ConV[k]=new float[cols];
+				ConV[k]=new float[cols]();
 
-			int pos=-1;
-			for(int posi=0;posi<scalenum;posi++){
-
-				if(patch->height==scaleorder[posi]){
-
-					pos=posi;
-					break;
-				}
-
-
-			}
-
-
-
-			for (int mm = 0; mm < rows; mm++){
-				for (int nn = 0; nn < cols; nn++){			                        
+			for (int mm = 0; mm < rows; mm+=step){
+				for (int nn = 0; nn < cols; nn+=step){			                        
 
 					float vals=0.0;
 					for(vector<float>::size_type iHOG=0;iHOG<czpathHOG.size();iHOG++){
 
-						vals+=czpathHOG[iHOG]*(*VM[pos][mm][nn])[iHOG];
+						vals+=czpathHOG[iHOG]*(*VM[mm][nn])[iHOG];
 					}
 
 					ConV[mm][nn] = vals;
 				}
 			}
 
-			cvReleaseImage(&czpatch);
-
-
-
-
-
 			float pool[5]={0};
 			int countpools=0;
+			
+			int fixrows= rows - rows%4;
+			int fixcols= cols - cols%4;
+			
 			for(int ii=0;ii<2;ii++){
 
 				for(int jj=0;jj<2;jj++)
 				{
 					countpools++;
-					for(int iii=ii*rows/2;iii<(ii+1)*rows/2;iii++){
+					
+					for(int iii=ii*ceil((float)fixrows/2);iii<(ii+1)*ceil((float)fixrows/2);iii+=step){
 
-						for(int jjj=jj*cols/2;jjj<(jj+1)*cols/2;jjj++){
+						for(int jjj=jj*ceil((float)fixcols/2);jjj<(jj+1)*ceil((float)fixcols/2);jjj+=step){
 
 							if(pool[countpools]<ConV[iii][jjj])
 								pool[countpools]=ConV[iii][jjj];
 
 						}
 					}
+					
 				}
 			}
 
@@ -273,55 +231,47 @@ int level_main(int clan,string *curpath){
 			delete []ConV;
 
 			for(int iiii=1;iiii<5;iiii++){
-
 				if(pool[0]<pool[iiii])
 					pool[0]=pool[iiii];
 			}
 			
-		for (int i = 0; i < 5; i++){		                            
-
-				foutimageRept << pool[i] ;
-
+			for (int i = 0; i < 5; i++){		                            
+				foutimageRept << pool[i];
 				foutimageRept << endl;
 			}
 
 			cout<<"The "<<j<<" patch"<<endl;
-              cvReleaseImage(&patch);
-
+            cvReleaseImage(&patch);
 		}
 
 
 		foutimageRept.close();
 		finpatchname.close();
+
 		cout<<"The "<<i<<" image"<<endl;
 
-		ifstream finscales1(patchscaleFile);
-		for(int iScale1=0;iScale1<scalenum;iScale1++)
+		for(int iirows=0;iirows<rows;iirows+=step)
 		{
-
-			int sc1;
-			finscales1>>sc1;					
-			int rows1=image->height-sc1+1;
-			int cols1=image->width-sc1+1;
-
-			for(int iirows=0;iirows<rows1;iirows++)
+			for(int c = 0; c < cols; c+=step)
 			{
-				for(int c = 0; c < cols1; c++)
-				{
-					delete VM[iScale1][iirows][c];
-				}
-
-				delete []VM[iScale1][iirows];
+				delete VM[iirows][c];
 			}
-			delete []VM[iScale1];
 
-	}
+			delete []VM[iirows];
+		}
+		if(step==2)
+		{
+			for(int iirows=1;iirows<rows;iirows+=step)
+			{
+				delete []VM[iirows];
+			}
+		}
+		delete VM;
 
-		finscales1.close();
 		clock_t t2 = clock();
 		std::cout<<"time: "<<t2-t1<<std::endl;
 
-		cvReleaseImage(&image);
+		
 	}
 	delete desc;
 	return 0;
@@ -351,7 +301,7 @@ void initialize(string params)
 	ifs.close();
 }
 
-void main(){
+void main(int argv, char* args[]){
 	
 	initialize("params.cfg");
 

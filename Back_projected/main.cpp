@@ -10,14 +10,10 @@
 #include <iostream>
 
 using namespace std;
-
-GLfloat angle_interval = 0;
-GLint model_begin = 0;
+GLint window_size = 200;
 
 GLMmodel *model;
 double threshold = 0.0;
-GLfloat angle = 0;
-GLfloat angle_max = 0;
 GLfloat radius = 0.0;
 
 
@@ -32,35 +28,25 @@ string style_path;
 
 string back_projection_path;
 FileZ fz;
-GLint mlist;
 
 clock_t start;
 clock_t finish;
 
 
 //Sampling seeds
-void setseed_and_style()
+void setseed_and_style(string filename)
 {
-	cout << "set seed" << endl;
+	cout << "read seed" << endl;
 	FILE *file;
-	file = fopen(seed_path.data(), "r");
+	file = fopen(filename.data(), "r");
 	if (!file)
 	{
-		fprintf(stderr, "setseed failed: can't open file \"%s\".\n", seed_path);
+		fprintf(stderr, "setseed failed: can't open file \"%s\".\n", filename);
 		system("PAUSE");
 		exit(1);
 	}
 	char st1[30];
-	GLfloat unused[3];
-	for (int k = 0; k < model_current; k++)
-	{
-		fgets(st1, 30, file);
-		
-		for (int i = 0; i < snum; i++)
-		{
-			fscanf(file, "%f %f %f\n", &unused[0], &unused[1], &unused[2]);
-		}
-	}
+	fgets(st1, 30, file);
 	fgets(st1, 30, file);
 	model->numseeds = snum;
 	model->seeds = (GLfloat *)malloc(sizeof(GLfloat)* 3 * (model->numseeds));
@@ -72,6 +58,7 @@ void setseed_and_style()
 	}
 
 	fclose(file);
+
 	cout << "read style" << endl;
 	
 	model->isstyle = new bool[model->numseeds];
@@ -135,61 +122,16 @@ void isincube()
 	}
 }
 
-void writeSeeds()
-{
-	ofstream ofile;
-	ofile.open(seed_path, ios::app);
-	if (ofile.fail())
-	{
-		cout << "failed to open seed file" << endl;
-		exit(2);
-	}
-
-	ofile << fz.files[model_current].name << endl;
-	for (int j = 0; j < model->numseeds; j++)
-	{
-		ofile << model->seeds[3 * j + 0] << " " << model->seeds[3 * j + 1] << " " << model->seeds[3 * j + 2] << endl;
-	}
-
-	ofile.close();
-}
-
-
-
-void del()
-{
-	delete[] model;
-}
-
-void GL_myInitial()
-{
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-	//GLfloat light_ambient [] = {0.75f, 0.75f, 0.75f, 1.0f};
-	GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
-}
-
 BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char * bitmapData)
 {
-	//BITMAPFILEHEADER
+	//填充BITMAPFILEHEADER
 	BITMAPFILEHEADER bitmapFileHeader;
 	memset(&bitmapFileHeader, 0, sizeof(BITMAPFILEHEADER));
 	bitmapFileHeader.bfSize = sizeof(BITMAPFILEHEADER);
 	bitmapFileHeader.bfType = 0x4d42;	//BM
 	bitmapFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
-	//BITMAPINFOHEADER
+	//填充BITMAPINFOHEADER
 	BITMAPINFOHEADER bitmapInfoHeader;
 	memset(&bitmapInfoHeader, 0, sizeof(BITMAPINFOHEADER));
 	bitmapInfoHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -201,10 +143,11 @@ BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char
 	bitmapInfoHeader.biSizeImage = width * abs(height) * 3;
 
 	//////////////////////////////////////////////////////////////////////////
-	FILE * filePtr;			//
-	unsigned char tempRGB;	//
+	FILE * filePtr;			//连接要保存的bitmap文件用
+	unsigned char tempRGB;	//临时色素
 	int imageIdx;
 
+	//交换R、B的像素位置,bitmap的文件放置的是BGR,内存的是RGB
 	for (imageIdx = 0; imageIdx < bitmapInfoHeader.biSizeImage; imageIdx += 3)
 	{
 		tempRGB = bitmapData[imageIdx];
@@ -228,7 +171,7 @@ BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char
 	return TRUE;
 }
 
-void saveScreenShot(int clnHeight, int clnWidth)
+void saveScreenShot(int clnHeight, int clnWidth, GLfloat angle)
 {
 	//int clnHeight,clnWidth;	//client width and height
 	static void * screenData;
@@ -238,7 +181,7 @@ void saveScreenShot(int clnHeight, int clnWidth)
 	memset(screenData, 0, len);
 	glReadPixels(0, 0, clnWidth, clnHeight, GL_RGB, GL_UNSIGNED_BYTE, screenData);
 
-	int view_current = angle / angle_interval + 1;
+	int view_current = angle / 30 + 1;
 
 	string
 		filename2 = back_projection_path + "\\" +
@@ -272,37 +215,16 @@ void initialize(string params)
 		>> tmp >> style_path
 		>> tmp >> snum
 		>> tmp >> view_num
-		>> tmp >> angle_max
-		>> tmp >> angle_interval
-		>> tmp >> radius
-		>> tmp >> model_begin;
+		>> tmp >> radius;
 
 	ifs.close();
 
-	//mkdir
-	/*for (int i = 1; i <= view_num; i++)
-	{
-		string temp = patch_path + "\\" + to_string(i);
-		FileZ tmp;
-		tmp.name = temp;
-		if (!tmp.isExist())
-		{
-			_mkdir(temp.data());
-		}
-	}*/
-
-	//initialize view
-	//angle = -angle_interval;
-	angle = 0;
 	threshold = pow(radius, 2) * 3;
 	
 	//initial model
 	fz.name = models_path;
 	fz.type = "obj";
 	fz.getFiles();
-	model = glmReadOBJ(const_cast<char *>(fz.files[model_current].path.c_str()));
-	setseed_and_style();
-	isincube();
 
 }
 
@@ -352,7 +274,6 @@ void initRendering()
 	gluLookAt(0, -1.732 * 2, 1 * 2,
 		0, 0, 0,
 		0, 1 * 2, 1.732 * 2);
-	mlist = glmList(model, 0);
 }
 
 void reshape(int w, int h)
@@ -367,102 +288,84 @@ void reshape(int w, int h)
 	gluLookAt(0, -1.732 * 2, 1 * 2,
 	0, 0, 0,
 	0, 1 * 2, 1.732 * 2);
-	/*gluLookAt(0, 1 * 2, -1.732 * 2,
-		0, 0, 0,
-		0, 1 * 2, 1.732 * 2);*/
 }
-/*
-bool checkstyle()
-{
 
-	for (int i = 0; i < model->numseeds; i++)
-	{
-		if (model->isstyle[i])
-		{
-			return true;
-		}
-	}
-	return false;
-}*/
 
 void render()
 {
-	/*if(!model[model_current]->isstyle[model->seed_current])
-	return;*/
-
-	glPushMatrix();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glRotatef((GLfloat)angle, 0, 1, 0);
-	glRotatef((GLfloat)angle, 0, 0, 1);
-	glCallList(mlist);
-
-	glPopMatrix();
 	
-	if (model->isstyle[model->seed_current])
-	    saveScreenShot(700, 700);
-	glutSwapBuffers();
-
-	if (angle > angle_max)
+	cout << "render" << endl;
+	for (int k = 0; k < fz.files.size(); k++)
 	{
-		angle = 0;
-		model->seed_current++;
-		while (model->seed_current < snum && model->isstyle[model->seed_current] == false)
+		start = clock();
+		model = glmReadOBJ(const_cast<char *>(fz.files[model_current].path.c_str()));
+		int pos = fz.files[model_current].path.find_last_of('\\');
+		int length = fz.files[model_current].path.length();
+		string seed_filename = seed_path + "\\" + fz.files[model_current].path.substr(pos + 1, length - 5 - pos) + ".off";
+		setseed_and_style(seed_filename);
+		isincube();
+		for (int i = 0; i < 30; i++)
 		{
-			
+			for (GLfloat angle = 30; angle < 60; angle = angle + 30)
+			{
+
+				glPushMatrix();
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				glRotatef((GLfloat)angle, 0, 0, 1);
+				
+				for (int i = 0; i < model->numtriangles; i++)
+				{
+					glBegin(GL_TRIANGLES);
+					//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
+					//cout << "color size is" << _msize(model->iscolored)/sizeof(bool);
+
+					if (model->iscolored[model->seed_current * model->numtriangles + i] == false)
+					{
+						glColor3f(0.71f, 0.71f, 0.71f);
+					}
+					else
+					{
+						glColor3f(0.0f, 0.0f, 8.0f);
+						//glColor3f(0.71f, 0.71f, 0.71f);
+					}
+
+					int ifindex = model->triangles[i].findex;
+					glNormal3f(model->facetnorms[3 * ifindex], model->facetnorms[3 * ifindex + 1], model->facetnorms[3 * ifindex + 2]);
+
+					glVertex3f(model->vertices[model->triangles[i].vindices[0] * 3 + 0],
+						model->vertices[model->triangles[i].vindices[0] * 3 + 1],
+						model->vertices[model->triangles[i].vindices[0] * 3 + 2]);
+
+					glVertex3f(model->vertices[model->triangles[i].vindices[1] * 3 + 0],
+						model->vertices[model->triangles[i].vindices[1] * 3 + 1],
+						model->vertices[model->triangles[i].vindices[1] * 3 + 2]);
+
+					glVertex3f(model->vertices[model->triangles[i].vindices[2] * 3 + 0],
+						model->vertices[model->triangles[i].vindices[2] * 3 + 1],
+						model->vertices[model->triangles[i].vindices[2] * 3 + 2]);
+
+					glEnd();
+
+				}
+
+				glPopMatrix();
+
+				if (model->isstyle[model->seed_current])
+					saveScreenShot(window_size, window_size, angle);
+				//glutSwapBuffers();
+			}
 			model->seed_current++;
 		}
 
-		if (model->seed_current == snum)
-		{
-			cout << fz.files[model_current].file << " done!" << endl;
-
-			//save seeds
-			//writeSeeds();
-			glmDelete(model);		
-			model_current++;
-
-			//read the next model
-			if (model_current == fz.files.size())
-			{
-				cout << "The back projection program runs successfully!" << endl;
-				cout << "All shapes " << fz.files.size() << " have been handled!" << endl;
-				finish = clock();
-				cout << "it takes " << (finish - start) / 1000 << "seconds" << endl;
-				//cout << "Press any key here to close this program!" << endl;
-				//cin.get();
-				exit(0);
-			}
-			else
-			{
-				model = glmReadOBJ(const_cast<char *>(fz.files[model_current].path.c_str()));
-				setseed_and_style();
-				isincube();
-			}
-					
-		}
-		//Notice: delete the previous list before create a new one,
-		//otherwise, memory explosion will happen !
-		glDeleteLists(mlist, 1);
-		mlist = glmList(model, 0);
+		cout << fz.files[model_current].file << " done!" << endl;
+		glmDelete(model);
+		model_current++;
+		finish = clock();
+		cout << "it takes " << (finish - start) / 1000 << "seconds" << endl;
 	}
-	else{
-		angle = angle + angle_interval;
-	}
-	//Sleep(1000);
-	glutPostRedisplay();
+
 }
-
-void update(void) {
-
-	//Sleep(1000);
-	if(model->isstyle[model->seed_current])
-	    saveScreenShot(700, 700);
-	glutPostRedisplay();
-
-	//if(angle > 329.0)//
-	
-}
-
 
 
 int main(int argc, char * argv[])
@@ -471,24 +374,17 @@ int main(int argc, char * argv[])
 	start = clock();
 
 	initialize("params.cfg");
-	//isincube();
-	//GL_myInitial();//
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(700, 700);
-	glutInitWindowPosition(700, 100);     
-	glutCreateWindow("Back projected to style patches on shapes");
+	glutInitWindowSize(window_size, window_size);
+	glutInitWindowPosition(window_size, 100);
+	glutCreateWindow("Sampling parts");
+	glutHideWindow();
 	initRendering();
-	glutDisplayFunc(render);
-	glutReshapeFunc(reshape);
-//	glutIdleFunc(&update);
-	glutMainLoop();
-	
-	
+	reshape(window_size, window_size);
+	render();
 
-	
-	//cin.get();
 	return 0;
 
 }
