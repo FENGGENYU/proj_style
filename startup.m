@@ -1,7 +1,7 @@
 %% start up parameters
 clear;
 K=50;    % kmeans's cluster NO.
-dataname='hu_building';
+dataname='demo';
 run_demo=0;
 
 %% add path

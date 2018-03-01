@@ -145,17 +145,18 @@ void setSeeds()
 
 }
 
-void writeSeeds()
+void writeSeeds(string seed_filename)
 {
 	ofstream ofile;
-	ofile.open(seed_path, ios::app);
+	ofile.open(seed_filename, ios::out);
 	if (ofile.fail())
 	{
 		cout << "failed to open seed file" << endl;
 		exit(2);
 	}
 
-	ofile << fz.files[model_current].name << endl;
+	ofile << "OFF" << endl;
+	ofile << 30<<' '<<0<<' '<<0 << endl;
 	for (int j = 0; j < model->numseeds; j++)
 	{
 		ofile << model->seeds[3 * j + 0] << " " << model->seeds[3 * j + 1] << " " << model->seeds[3 * j + 2] << endl;
@@ -350,6 +351,10 @@ void initialize(string params)
 	{
 		_mkdir(patch_path.data());
 	}
+	if (_access(seed_path.c_str(), 0) == -1)
+	{
+		_mkdir(seed_path.data());
+	}
 	for (int i = 1; i <= view_num; i++)
 	{
 		string temp = patch_path + "\\" + to_string((long double)i);
@@ -509,7 +514,7 @@ void render()
 
 		cout << fz.files[model_current].file << " done!" << endl;
 		if (!seed_exist)
-			writeSeeds();
+			writeSeeds(seed_filename);
 
 		glmDelete(model);
 		model_current++;
