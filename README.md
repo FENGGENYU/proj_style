@@ -44,7 +44,13 @@ https://pan.baidu.com/s/1nwhU9NN
 	
 (a). Set the name of dataset that you want to run. 
 
-Please set your data set name to variable 'dataname' in 'startup.m'. It should be consistent to the name of subfolder in 'data' folder, eg. hu_building or our_furniture. 
+Please set your data set name to variable 'dataname' in 'startup.m'.
+
+```
+dataname='demo'; %data set name you are going to run
+```
+
+It should be consistent to the name of subfolder in 'data' folder, eg. hu_building or our_furniture. 
 
 So that the program can read data from the certain folder.
 
@@ -58,7 +64,7 @@ If you want to try furniture and building from our data sets, please run followi
 ```
 output_our_style.m
 ```
-The result is outputed to data\data_set_name\style_path\style_index.txt.
+The style localizationresult is output to 'data\data_set_name\style_path\style_index.txt'.
 
 **Step 3. Show style localization :**
 	
@@ -73,11 +79,9 @@ Then run the executive file:
 ```
 $ Back_projected\back_projection.exe
 ```
-In the directory 'data\data_set_name\style_path', there are output pictures which show representative style patch localization on selected shapes. 
+In the directory 'data\data_set_name\style_patch', there are output pictures which show representative style patch localization on selected shapes. 
 
 The style localization is colored blue. If you can't find blue in one picture, it may mean that the style area can't be seen in this view.
-
-These images are named as 'model index\_patch index\_view index.bmp'.
 
 ### Usage 2: Complete Runing process
 
@@ -91,16 +95,23 @@ The following settings are examples of 'demo'.
 
 **Step 1. Data setup :**
 
-You can download 3dlines and models according to the link below.
+You can download 3dlines and models(.obj) of demo and our complete data set according to the link below.
 ```
 https://pan.baidu.com/s/1cQGegI
 ```
-Please unzip and put them in 'data\demo' folder, then run one dataset each time.
+Please unzip and put 3dlines projected images and models of demo in 'data\demo' folder.
 
 Note one subfolder in 'data' is prepared for only one data set, eg. 'data\furniture'. 
 
-Make sure the bmp files are put in 'data\data_set_name\3dlines' and the obj files are put in 'data\data_set_name\models'.
-	
+Make sure the 3dlines projected files are put in 'data\data_set_name\3dlines' and the obj files are put in 'data\data_set_name\models'. 
+
+No subfolder in 'data\demo\3dlines' and 'data\demo\models'.
+
+```
+data\demo\3dlines\*.bmp
+data\demo\models\*.obj
+```
+
 **Step 2. Sample patches and calculate hog features for patches :**
 	
 You just need to change name of data set in 'sample_and_hog\params.cfg', and make sure that the paths is right to the data set folder you want. 
@@ -112,7 +123,7 @@ seed_path:       ..\data\demo\sample_points
 ```
 Then run the executive file:
 ```
-$ sample_and_hog\back_projection.exe
+$ sample_and_hog\sample.exe sampling
 ```
 This can output directories: 'data\demo\patch' and 'data\demo\sample_points'. 
 
@@ -158,7 +169,7 @@ $ Complete_run.m
 ```
 You can see the output style clustering purity and change of number of style kernels in MATLAB terminal.
 
-This can also output txt files of style localization in 'data\demo\style_path\style_patch\style_index.txt'. 
+This can also output txt files of style localization in 'data\demo\style_patch\style_index.txt'. 
 
 **Step 6. Show style localization :**
 	
@@ -176,8 +187,6 @@ $ Back_projected\back_projection.exe
 In the directory 'data\demo\style_path', there are output pictures which show representative style patch localization on selected shapes. 
 
 The style localization is colored blue. If you can't find blue in one picture, it may mean that the style area can't be seen in this view.
-
-These images are named as 'model index\_patch index\_view index.bmp'.
 
 ### License
 
