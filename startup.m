@@ -2,7 +2,11 @@
 clear;
 K=50;    % kmeans's cluster NO.
 dataname='demo';
-run_demo=0;
+%select from
+%demo
+%hu_building, hu_car, hu_drinkware, hu_furniture, hu_leg
+%our_building, our_car, our_furniture
+
 
 %% add path
 Data_Path='data';
@@ -26,7 +30,7 @@ pcsize = 48;   %  to accomplish  the calculator of the images HOG .
 %% set the percent of the semi-supervised
 pectlbs=1;
 label_or_constraint=0;
-
+run_demo=0;
 %% calculate number of shapes
 FILES_TO_PROCESS        = '*.bmp';
 IMGS = dir(fullfile(lines_Path, FILES_TO_PROCESS));
