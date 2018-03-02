@@ -100,17 +100,16 @@ You can download 3dlines and models(.obj) of demo and our complete data set acco
 ```
 https://pan.baidu.com/s/1cQGegI
 ```
-Please unzip and put 3dlines projected images and models of demo in 'data\demo' folder.
+Please unzip and put 3dlines projected images, models and labels of demo in 'data\demo' folder.
 
 Note one subfolder in 'data' is prepared for only one data set, eg. 'data\furniture'. 
 
-Make sure the 3dlines projected files are put in 'data\data_set_name\3dlines' and the obj files are put in 'data\data_set_name\models'. 
-
-No subfolder in 'data\demo\3dlines' and 'data\demo\models'.
+No subfolder in 'data\demo\3dlines' and 'data\demo\models'. You files should be put as follow:
 
 ```
 data\demo\3dlines\*.bmp
 data\demo\models\*.obj
+data\demo\labels.mat
 ```
 
 **Step 2. Sample patches and calculate hog features for patches :**
