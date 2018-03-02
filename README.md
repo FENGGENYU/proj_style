@@ -4,7 +4,7 @@
 
 In this repository, we release codes for style patch sampling, feature encoding, label-constrainted style clustering and style patch back projection.
 
-You can try style localization presented in our paper and run demo  complete process with all released code.
+You can try style localization presented in our paper and run demo in complete process with all released code.
 
 ### Platform
 
