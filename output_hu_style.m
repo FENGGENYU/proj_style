@@ -18,6 +18,9 @@ elseif strcmp(dataname,'hu_furniture')
     K=100;
 elseif strcmp(dataname,'hu_leg')
     select_model=[25,38,63];
+elseif strcmp(dataname,'our_car')
+    select_model=[34,39,63,273,297,319,326,335,340,433,446,721,734,739,948,954];
+    K=100;
 end
 %sty = styw;
 %% calculate style localization for all shapes

@@ -15,7 +15,8 @@ GLint window_size = 200;
 GLMmodel *model;
 double threshold = 0.0;
 GLfloat radius = 0.0;
-
+double angle_threshold = 60.0;
+double view_distance = 1.5;
 
 int model_current = 0;
 
@@ -215,7 +216,8 @@ void initialize(string params)
 		>> tmp >> style_path
 		>> tmp >> snum
 		>> tmp >> view_num
-		>> tmp >> radius;
+		>> tmp >> radius
+		>> tmp >> angle_threshold;
 
 	ifs.close();
 
@@ -271,9 +273,10 @@ void initRendering()
 	/*gluLookAt(0, 1 * 2, -1.732 * 2,
 		0, 0, 0,
 		0, 1 * 2, 1.732 * 2);*/
-	gluLookAt(0, -1.732 * 2, 1 * 2,
+	
+	gluLookAt(0, -1.732 * view_distance, 1 * view_distance,
 		0, 0, 0,
-		0, 1 * 2, 1.732 * 2);
+		0, 1 * view_distance, 1.732 * view_distance);
 }
 
 void reshape(int w, int h)
@@ -282,12 +285,12 @@ void reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//gluPerspective(60.0,(GLfloat)w/(GLfloat)h,1.0,20.0);
-	glOrtho(-2, 2, -2, 2, 1.0, 20.0);
+	glOrtho(-1, 1, -1, 1, 1.0, 20.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0, -1.732 * 2, 1 * 2,
-	0, 0, 0,
-	0, 1 * 2, 1.732 * 2);
+	gluLookAt(0, -1.732 * view_distance, 1 * view_distance,
+		0, 0, 0,
+		0, 1 * view_distance, 1.732 * view_distance);
 }
 
 
@@ -306,7 +309,7 @@ void render()
 		isincube();
 		for (int i = 0; i < 30; i++)
 		{
-			for (GLfloat angle = 30; angle < 60; angle = angle + 30)
+			for (GLfloat angle = 30; angle < angle_threshold; angle = angle + 30)
 			{
 
 				glPushMatrix();
