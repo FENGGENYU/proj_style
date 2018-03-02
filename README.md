@@ -1,9 +1,10 @@
 # Semi-Supervised-Co-Analysis-of-3D-Shape-Styles-from-Projected-Lines
-This is a release code for our paper accepted on "ACM Transactions On Graphics".
 
 ### Intruduction
 
 In this repository, we release codes for style patch sampling, feature encoding, label-constrainted style clustering and style patch back projection.
+
+You can try style localization presented in our paper and run demo of complete process with all released code.
 
 ### Platform
 
