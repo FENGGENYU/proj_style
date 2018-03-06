@@ -78,7 +78,8 @@ style_path:       ..\data\data_set_name\style_patch\style_index.txt
 ```
 Then run the executive file:
 ```
-$ Back_projected\back_projection.exe
+$ cd Back_projected
+$ back_projection.exe
 ```
 In the directory 'data\data_set_name\style_patch', there are output pictures which show representative style patch localization on selected shapes. 
 
@@ -123,7 +124,8 @@ seed_path:       ..\data\demo\sample_points
 ```
 Then run the executive file:
 ```
-$ sample_and_hog\sample.exe sampling
+$ cd sample_and_hog
+$ sample.exe sampling
 ```
 This can output directories: 'data\demo\patch' and 'data\demo\sample_points'. 
 
@@ -153,6 +155,7 @@ curpath ..\data\demo
 ```
 Then run the executive file:
 ```
+$ cd convolutional
 $ convolute.exe
 ```
 This can output txt files of convolutional features in 'data\demo\3dlines'. 
@@ -182,7 +185,8 @@ style_path:       ..\data\demo\style_patch\style_index.txt
 ```
 Then run the executive file:
 ```
-$ Back_projected\back_projection.exe
+$ cd Back_projected
+$ back_projection.exe
 ```
 In the directory 'data\demo\style_path', there are output pictures which show representative style patch localization on selected shapes. 
 
