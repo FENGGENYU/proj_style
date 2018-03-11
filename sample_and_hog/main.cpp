@@ -91,30 +91,30 @@ void setSeeds()
 		//srand((unsigned)time(NULL));
 		int index = rand() % model->numtriangles;
 
-		double A[] = { model->vertices[model->triangles[index].vindices[0] * 3 + 0],
-			model->vertices[model->triangles[index].vindices[0] * 3 + 1],
-			model->vertices[model->triangles[index].vindices[0] * 3 + 2] };
-
-		double B[] = { model->vertices[model->triangles[index].vindices[1] * 3 + 0],
-			model->vertices[model->triangles[index].vindices[1] * 3 + 1],
-			model->vertices[model->triangles[index].vindices[1] * 3 + 2] };
-
-		double C[] = { model->vertices[model->triangles[index].vindices[2] * 3 + 0],
-			model->vertices[model->triangles[index].vindices[2] * 3 + 1],
-			model->vertices[model->triangles[index].vindices[2] * 3 + 2] };
-
-		double r1 = rand() % (N + 1) / (float)(N + 1);
-		double r2 = rand() % (N + 1) / (float)(N + 1);
-
 		double temp_seed[3];
 
-		temp_seed[0] = (1 - sqrt(r1))*A[0] + sqrt(r1)*(1 - r2)*B[0] + sqrt(r1)*r2*C[0];
-		temp_seed[1] = (1 - sqrt(r1))*A[1] + sqrt(r1)*(1 - r2)*B[1] + sqrt(r1)*r2*C[1];
-		temp_seed[2] = (1 - sqrt(r1))*A[2] + sqrt(r1)*(1 - r2)*B[2] + sqrt(r1)*r2*C[2];
-
 		int temp = 0;
-		while (temp<10000)
+		while (temp<model->numtriangles)
 		{
+			double A[] = { model->vertices[model->triangles[index].vindices[0] * 3 + 0],
+				model->vertices[model->triangles[index].vindices[0] * 3 + 1],
+				model->vertices[model->triangles[index].vindices[0] * 3 + 2] };
+
+			double B[] = { model->vertices[model->triangles[index].vindices[1] * 3 + 0],
+				model->vertices[model->triangles[index].vindices[1] * 3 + 1],
+				model->vertices[model->triangles[index].vindices[1] * 3 + 2] };
+
+			double C[] = { model->vertices[model->triangles[index].vindices[2] * 3 + 0],
+				model->vertices[model->triangles[index].vindices[2] * 3 + 1],
+				model->vertices[model->triangles[index].vindices[2] * 3 + 2] };
+
+			double r1 = rand() % (N + 1) / (float)(N + 1);
+			double r2 = rand() % (N + 1) / (float)(N + 1);
+
+			temp_seed[0] = (1 - sqrt(r1))*A[0] + sqrt(r1)*(1 - r2)*B[0] + sqrt(r1)*r2*C[0];
+			temp_seed[1] = (1 - sqrt(r1))*A[1] + sqrt(r1)*(1 - r2)*B[1] + sqrt(r1)*r2*C[1];
+			temp_seed[2] = (1 - sqrt(r1))*A[2] + sqrt(r1)*(1 - r2)*B[2] + sqrt(r1)*r2*C[2];
+
 			bool tag = true;
 			for (int ttt = 0; ttt<i; ttt++){
 				double distance_to_seed = pow(temp_seed[0] - model->seeds[3 * ttt + 0], 2) +
@@ -133,16 +133,16 @@ void setSeeds()
 			{
 				index = (rand() + index) % model->numtriangles;
 				temp++;
+				
 			}
 		}
-
+		//cout << temp << " "<< index << endl;
 		model->seeds[3 * i + 0] = temp_seed[0];
 		model->seeds[3 * i + 1] = temp_seed[1];
 		model->seeds[3 * i + 2] = temp_seed[2];
 
-
 	}
-
+    cout << "Set seed done" << endl;
 }
 
 void writeSeeds(string seed_filename)
