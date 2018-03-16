@@ -1,0 +1,1 @@
+start "" "..\..\normalize_and_hog\sample.exe" "sampling" "..\..\normalize_and_hog\params_demo.cfg"

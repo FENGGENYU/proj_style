@@ -376,7 +376,12 @@ int main(int argc, char * argv[])
 
 	start = clock();
 
-	initialize("params.cfg");
+	if (argc <2)
+		return 0;
+
+	string params = argv[1];
+
+	initialize(params);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

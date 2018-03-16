@@ -8,17 +8,12 @@ function []=style_localization_select(pslf_Path,K,neworder,views,stylepatch_Path
     end
     
     %% select models in paper
-    if strcmp(dataname,'our_furniture400')
+    if strcmp(dataname,'our_furniture')
         select_model=[2,3,5,6,14,15,21,147,152,156,157,164,181];
     elseif strcmp(dataname,'our_building')
         select_model=[27,57,59,95,106,116,127,184,197,204,290,309,329];
-    elseif strcmp(dataname,'hu_drinkware')
-        select_model=[10,26,52];
-    elseif strcmp(dataname,'hu_furniture')
-        select_model=[9,155,397,525];
-        K=100;
-    elseif strcmp(dataname,'hu_leg')
-        select_model=[25,38,63];
+	else
+		select_model=[];
     end
     %%
 	result_name=fullfile(pslf_Path,'result.mat');

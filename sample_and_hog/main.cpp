@@ -568,10 +568,12 @@ void normalize()
 
 int main(int argc, char * argv[])
 {
-	initialize("params.cfg");
-	if (argc <2)
+	if (argc <3)
 		return 0;
 
+	string params = argv[2];
+	initialize(params);
+	
 	option = argv[1];
 
 	if (option == "normalize")

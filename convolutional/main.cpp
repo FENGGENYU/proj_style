@@ -303,7 +303,10 @@ void initialize(string params)
 
 void main(int argv, char* args[]){
 	
-	initialize("params.cfg");
+	if(argv < 2)
+		return;
+	string params = args[1];
+	initialize(params);
 
 	for (int i = view_begin; i <= view_end; i++)
 		level_main(i,&curpath);
