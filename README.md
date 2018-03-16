@@ -26,7 +26,7 @@ You can also compile the code by yourself, if you have any question in compiling
 
 ### Usage 1: style localization
 
-Style localization presented in our paper are released, these shapes are mainly selected from datasets of [Hu et al 2017] and our data sets.
+Style localization presented in figures of our paper are released, these shapes are mainly selected from datasets of [Hu et al 2017] and our data sets.
 
 **Step 1. Data setup :**
 
@@ -38,50 +38,20 @@ You can download features according to the link below and put them in 'data' fol
 
 The size of feature files are a little big, so I put them in network disk alone:
 ```
-https://pan.baidu.com/s/1nwhU9NN
+https://www.dropbox.com/sh/b4wrexn5txqit1d/AABuZqyZOGrWj4zLeRRRXCb5a?dl=0
 ```
 
 **Step 2. Style localization :**
 	
-(a). Set the name of dataset that you want to run. 
-
-Please set your data set name to variable 'dataname' in 'startup.m'.
+(a). Run scripts in 'scripts' folder for one dataset each time. For example: 
 
 ```
-dataname='demo'; %data set name you are going to run
+$ cd scripts\our_furniture
+$ .\style_localization.sh
+$ .\show_style.sh
 ```
 
-It should be consistent to the name of subfolder in 'data' folder, eg. hu_building or our_furniture. 
-
-So that the program can read data from the certain folder.
-
-(b). Style localization for each shape.
-
-If you want to try data sets from [Hu et al 2017] and cars from our data sets, please run following script in MATLAB:
-```
-output_hu_style.m
-```
-If you want to try furniture and building from our data sets, please run following script in MATLAB:
-```
-output_our_style.m
-```
-The style localizationresult is output to 'data\data_set_name\style_path\style_index.txt'.
-
-**Step 3. Show style localization :**
-	
-You just need to change name of data set in 'Back_projected\params.cfg', and make sure that the paths is right to the data set folder you want. 
-```
-model_path:       ..\data\data_set_name\models
-back_projection_path:     ..\data\data_set_name\style_patch
-seed_path:        ..\data\data_set_name\sample_points
-style_path:       ..\data\data_set_name\style_patch\style_index.txt
-```
-Then run the executive file:
-```
-$ cd Back_projected
-$ back_projection.exe
-```
-In the directory 'data\data_set_name\style_patch', there are output pictures which show representative style patch localization on selected shapes. 
+In the directory 'data\our_furniture\style_patch', there are output pictures which show representative style patch localization on selected shapes. 
 
 The style localization is colored blue. If you can't find blue in one picture, it may mean that the style area can't be seen in this view.
 
@@ -99,11 +69,11 @@ The following settings are examples of 'demo'.
 
 You can download 3dlines and models(.obj) of demo and our complete data set according to the link below.
 ```
-https://pan.baidu.com/s/1cQGegI
+https://www.dropbox.com/sh/4iap7z7n5ryd1dr/AAALTkwZA70S3OBY2c5aTpIqa?dl=0
 ```
 Please unzip and put 3dlines projected images, models and labels of demo in 'data\demo' folder.
 
-Note one subfolder in 'data' is prepared for only one data set, eg. 'data\furniture'. 
+Note one subfolder in 'data' is prepared for only one data set, eg. 'data\furniture400'. 
 
 No subfolder in 'data\demo\3dlines' and 'data\demo\models'. You files should be put as follow:
 
@@ -113,84 +83,42 @@ data\demo\models\*.obj
 data\demo\labels.mat
 ```
 
-**Step 2. Sample patches and calculate hog features for patches :**
+**Step 2. Feature extraction and style analysis :**
 	
-You just need to change name of data set in 'sample_and_hog\params.cfg', and make sure that the paths is right to the data set folder you want. 
-```
-projection_path: ..\data\demo\3dlines
-patch_path:      ..\data\demo\patch
-model_path:      ..\data\demo\models
-seed_path:       ..\data\demo\sample_points
-```
-Then run the executive file:
-```
-$ cd sample_and_hog
-$ sample.exe sampling
-```
-This can output directories: 'data\demo\patch' and 'data\demo\sample_points'. 
-
-**Step 3. Feature preparation and Clustering :**
-	
-Please set your data set name to variable 'dataname' in 'startup.m'.
+Please run these commonds in order:
 
 ```
-dataname='demo_sample'; %data set name you are going to run
+$ cd scripts\demo
+$ .\sample.sh
+$ .\cluster.sh
+$ .\convolute.sh
+$ .\style_localization.sh
+$ .\show_style.sh
 ```
-Please feature_extraction = 1 in 'Complete_run.m'.
-```
-feature_extraction = 1; % 1 for feature preparation, 0 for feature fusion
-```
-Then run 'Complete_run.m' in MATLAB:
-```
-$ Complete_run.m
-```
-This can output directories: 'data\demo\cluster', 'data\demo\hog', 'data\demo\kernel', 'data\demo\imagesname', 'data\demo\txt'. 
 
-**Step 4. Convolute images :**
-	
-You just need to change name of data set in 'convolutional\params.cfg', and make sure that the paths is right to the data set folder you want. 
-
-```
-curpath ..\data\demo
-```
-Then run the executive file:
-```
-$ cd convolutional
-$ convolute.exe
-```
-This can output txt files of convolutional features in 'data\demo\3dlines'. 
-
-**Step 5. Feature fusion, style clustering and style localization :**
-	
-Please set feature_extraction = 0 in 'Complete_run.m'.
-```
-feature_extraction = 0; % 1 for feature preparation, 0 for feature fusion
-```
-Then run 'Complete_run.m' in MATLAB:
-```
-$ Complete_run.m
-```
-You can see the output style clustering purity and change of number of style kernels in MATLAB terminal.
-
-This can also output txt files of style localization in 'data\demo\style_patch\style_index.txt'. 
-
-**Step 6. Show style localization :**
-	
-You just need to change name of data set in 'Back_projected\params.cfg', and make sure that the paths is right to the data set folder you want. 
-```
-model_path:       ..\data\demo\models
-back_projection_path:     ..\data\demo\style_patch
-seed_path:        ..\data\demo\sample_points
-style_path:       ..\data\demo\style_patch\style_index.txt
-```
-Then run the executive file:
-```
-$ cd Back_projected
-$ back_projection.exe
-```
-In the directory 'data\demo\style_path', there are output pictures which show representative style patch localization on selected shapes. 
+In the directory 'data\demo\style_patch', there are output pictures which show representative style patch localization on all shapes. 
 
 The style localization is colored blue. If you can't find blue in one picture, it may mean that the style area can't be seen in this view.
+
+**If you want run more big data sets...**
+
+Please follow step 1 to set up dataset that you want to run.
+
+Then new and change following files which indicate dataset paths.
+
+Specifically, change the name of dataset 'demo' anywhere it appears in these files to the dataset name you want, eg. furniture400, .
+
+```
+Back_projected\params_demo.cfg  	-> Back_projected\params_furniture400.cfg
+convolutional\params_demo.cfg   	-> convolutional\params_furniture400.cfg
+sample_and_hog\params_demo.cfg  	-> sample_and_hog\params_furniture400.cfg
+scripts\demo\sample.sh          	-> scripts\furniture400\sample.sh
+scripts\demo\cluster.sh          	-> scripts\furniture400\cluster.sh
+scripts\demo\convolute.sh          	-> scripts\furniture400\convolute.sh
+scripts\demo\style_localization.sh  -> scripts\furniture400\style_localization.sh
+scripts\demo\show_style.sh          -> scripts\furniture400\show_style.sh
+```
+Finally, you can follow step 2 to run the code.
 
 ### License
 
