@@ -41,7 +41,7 @@ The size of feature files are a little big, so I put them in network disk alone:
 https://www.dropbox.com/sh/b4wrexn5txqit1d/AABuZqyZOGrWj4zLeRRRXCb5a?dl=0
 ```
 
-You files should be put as follow:
+Take one dataset 'our_furniture' for example, your files should be placed as follow:
 
 ```
 data\our_furniture\cluster
@@ -88,7 +88,7 @@ Please unzip and put 3dlines projected images, models and labels of demo in 'dat
 
 Note one subfolder in 'data' is prepared for only one data set, eg. 'data\furniture400'. 
 
-No subfolder in 'data\demo\3dlines' and 'data\demo\models'. You files should be put as follow:
+No subfolder in 'data\demo\3dlines' and 'data\demo\models'. You files should be placed as follow:
 
 ```
 data\demo\3dlines\*.bmp
