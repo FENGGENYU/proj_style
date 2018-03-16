@@ -41,6 +41,17 @@ The size of feature files are a little big, so I put them in network disk alone:
 https://www.dropbox.com/sh/b4wrexn5txqit1d/AABuZqyZOGrWj4zLeRRRXCb5a?dl=0
 ```
 
+You files should be put as follow:
+
+```
+data\our_furniture\cluster
+data\our_furniture\hog
+data\our_furniture\kernel
+data\our_furniture\models
+data\our_furniture\pslf
+data\our_furniture\sample_points
+```
+
 **Step 2. Style localization :**
 	
 (a). Run scripts in 'scripts' folder for one dataset each time. For example: 
@@ -50,6 +61,8 @@ $ cd scripts\our_furniture
 $ .\style_localization.sh
 $ .\show_style.sh
 ```
+
+Please run these commonds in order.
 
 In the directory 'data\our_furniture\style_patch', there are output pictures which show representative style patch localization on selected shapes. 
 
