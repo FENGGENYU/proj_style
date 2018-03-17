@@ -82,7 +82,7 @@ The following settings are examples of 'demo'.
 
 You can download 3dlines and models(.obj) of demo and our complete data set according to the link below.
 ```
-https://www.dropbox.com/sh/4iap7z7n5ryd1dr/AAALTkwZA70S3OBY2c5aTpIqa?dl=0
+https://www.dropbox.com/sh/rh3om1bxde0ivzn/AACAlUVZ8t6MBzGLzFf9SUr_a?dl=0
 ```
 Please unzip and put 3dlines projected images, models and labels of demo in 'data\demo' folder.
 
