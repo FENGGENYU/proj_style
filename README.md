@@ -28,7 +28,7 @@ You can also compile the code by yourself, if you have any question in compiling
 
 Style localization presented in figures(Fig 1, Fig7, Fig 20, Fig 22) of our paper are released, these shapes are mainly selected from datasets of [Hu et al 2017] and our data sets.
 
-One figure may contain shapes from varied datasets, but our code run one dataset a time for user's convenience.
+A figure may contain shapes from varied datasets. For user's convenience, our code is set to output results of shapes from one dataset for all figures one pass.
 
 **Step 1. Data setup :**
 
