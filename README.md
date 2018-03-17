@@ -119,7 +119,7 @@ The style localization is colored blue. If you can't find blue in one picture, i
 
 Please follow step 1 to set up dataset that you want to run.
 
-Then new and change following files which indicate dataset paths.
+Then new and change following files that indicates path of dataset.
 
 Specifically, change the name of dataset 'demo' anywhere it appears in these files to the dataset name you want, eg. furniture400, .
 
@@ -130,8 +130,8 @@ sample_and_hog\params_demo.cfg  	-> sample_and_hog\params_furniture400.cfg
 scripts\demo\sample.sh          	-> scripts\furniture400\sample.sh
 scripts\demo\cluster.sh          	-> scripts\furniture400\cluster.sh
 scripts\demo\convolute.sh          	-> scripts\furniture400\convolute.sh
-scripts\demo\style_localization.sh  -> scripts\furniture400\style_localization.sh
-scripts\demo\show_style.sh          -> scripts\furniture400\show_style.sh
+scripts\demo\style_localization.sh  	-> scripts\furniture400\style_localization.sh
+scripts\demo\show_style.sh          	-> scripts\furniture400\show_style.sh
 ```
 Finally, you can follow step 2 to run the code.
 
