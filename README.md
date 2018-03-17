@@ -26,7 +26,9 @@ You can also compile the code by yourself, if you have any question in compiling
 
 ### Usage 1: style localization
 
-Style localization presented in figures of our paper are released, these shapes are mainly selected from datasets of [Hu et al 2017] and our data sets.
+Style localization presented in figures(Fig 1, Fig7, Fig 20, Fig 22) of our paper are released, these shapes are mainly selected from datasets of [Hu et al 2017] and our data sets.
+
+One figure may contain shapes from varied datasets, but our code run one dataset a time for user's convenience.
 
 **Step 1. Data setup :**
 
