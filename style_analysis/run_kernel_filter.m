@@ -137,6 +137,7 @@ function []=run_kernel_filter(XL,Y,G,pslf_Path,views,run_demo,kernel_Path,models
             %Ucopy = U;
             %Wcopy = W;
             delta_puri = puriT(iter);
+			labels_output=labelc;
         end
 
         fprintf('puri: %f, delta_puri: %f, delta_kernel: %d \n',puri,delta_puri,delta_kernel);
