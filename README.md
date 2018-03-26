@@ -135,6 +135,20 @@ scripts\demo\show_style.sh          	-> scripts\furniture400\show_style.sh
 ```
 Finally, you can follow step 2 to run the code.
 
+## Citation
+If you use this code, please cite the following paper.
+```
+@article {yu_tog18,
+     title = {Semi-Supervised Co-Analysis of 3D Shape Styles from Projected Lines},
+     author = {Fenggen Yu and Yan Zhang and Kai Xu and Ali Mahdavi-Amiri and Hao Zhang},
+     journal = {ACM Transactions on Graphics},
+     volume = {37},
+     number = {2},
+     pages = {to appear},
+     year = {2018}
+}
+```
+
 ### License
 
 Copyright (c) 2017
