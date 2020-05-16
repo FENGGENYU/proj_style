@@ -8,10 +8,14 @@ You can try style localization presented in our paper and run demo in complete p
 
 ### Platform
 
-Our code has been tested on Windows 8.1.
+Our code has been tested on Windows 8 and 10.
 
 ### Installation
 
+You can use the executive file we provided directly without installing anything.
+
+If you need to compile cpp files, please notice:
+ 
 MATLAB, OPENGL, OPENCV should be installed.
 
 Our code has been tested on MATLAB 2016a and OPENCV 2.4.8.
@@ -20,9 +24,7 @@ Our code of patch sampling and feature encoding is complied on VS2010.
 
 Our code of back projection is complied on VS2012.
 
-If you have set up the environment, you can use the executive file we provided directly.
 
-You can also compile the code by yourself, if you have any question in compiling or other process, please contact me: yufg_nju@foxmail.com.
 
 ### Usage 1: style localization
 
