@@ -171,17 +171,17 @@ void del()
 {
 	delete[] model;
 }
-
+/*
 BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char * bitmapData)
 {
-	//Ìî³äBITMAPFILEHEADER
+	//å¡«å……BITMAPFILEHEADER
 	BITMAPFILEHEADER bitmapFileHeader;
 	memset(&bitmapFileHeader, 0, sizeof(BITMAPFILEHEADER));
 	bitmapFileHeader.bfSize = sizeof(BITMAPFILEHEADER);
 	bitmapFileHeader.bfType = 0x4d42;	//BM
 	bitmapFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 
-	//Ìî³äBITMAPINFOHEADER
+	//å¡«å……BITMAPINFOHEADER
 	BITMAPINFOHEADER bitmapInfoHeader;
 	memset(&bitmapInfoHeader, 0, sizeof(BITMAPINFOHEADER));
 	bitmapInfoHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -193,11 +193,11 @@ BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char
 	bitmapInfoHeader.biSizeImage = width * abs(height) * 3;
 
 	//////////////////////////////////////////////////////////////////////////
-	FILE * filePtr;			//Á¬½ÓÒª±£´æµÄbitmapÎÄ¼şÓÃ
-	unsigned char tempRGB;	//ÁÙÊ±É«ËØ
+	FILE * filePtr;			//è¿æ¥è¦ä¿å­˜çš„bitmapæ–‡ä»¶ç”¨
+	unsigned char tempRGB;	//ä¸´æ—¶è‰²ç´ 
 	int imageIdx;
 
-	//½»»»R¡¢BµÄÏñËØÎ»ÖÃ,bitmapµÄÎÄ¼ş·ÅÖÃµÄÊÇBGR,ÄÚ´æµÄÊÇRGB
+	//äº¤æ¢Rã€Bçš„åƒç´ ä½ç½®,bitmapçš„æ–‡ä»¶æ”¾ç½®çš„æ˜¯BGR,å†…å­˜çš„æ˜¯RGB
 	for (imageIdx = 0; imageIdx < bitmapInfoHeader.biSizeImage; imageIdx += 3)
 	{
 		tempRGB = bitmapData[imageIdx];
@@ -219,7 +219,7 @@ BOOL WriteBitmapFile(const char * filename, int width, int height, unsigned char
 
 	fclose(filePtr);
 	return TRUE;
-}
+}*/
 
 void saveScreenShot(int clnHeight, int clnWidth, GLfloat angle)
 {
@@ -248,23 +248,23 @@ void saveScreenShot(int clnHeight, int clnWidth, GLfloat angle)
 	Patch * mypatch = getpatch((unsigned char *)screenData, clnWidth, clnHeight);
 	HOGDescriptor *desc = new HOGDescriptor(cvSize(patch_size, patch_size), cvSize(16, 16), cvSize(8, 8), cvSize(8, 8), 9);
 	
-	//Èç¹û¿´µÃµ½±»Ñ¡ÖĞµÄÇøÓò
+	//å¦‚æœçœ‹å¾—åˆ°è¢«é€‰ä¸­çš„åŒºåŸŸ
 	if (mypatch->x1 > -0.5)
 	{
-		//×óÏÂ½Çµã
+		//å·¦ä¸‹è§’ç‚¹
 		BmpImage* blackpatch = NULL;
 		if (ceil(mypatch->x1*image->width) + patch_size - 1 <= image->width && ceil(mypatch->y1*image->height) + patch_size - 1 <= image->height)
 			blackpatch = imcrop(image, (int)ceil(mypatch->x1*image->width), (int)ceil(mypatch->y1*image->height), patch_size - 1);
-		//ÓÒÏÂ½Ç
+		//å³ä¸‹è§’
 		else if (mypatch->x2*image->width - patch_size + 1 >= 1 && ceil(mypatch->y1*image->height) + patch_size - 1 <= image->height)
 			blackpatch = imcrop(image, (int)floor(mypatch->x2*image->width - patch_size + 1), (int)ceil(mypatch->y1*image->height), patch_size - 1);
-		//×óÉÏ½Ç
+		//å·¦ä¸Šè§’
 		else if (ceil(mypatch->x1*image->width) + patch_size - 1 <= image->width && mypatch->y2*image->height - patch_size + 1 >= 1)
 			blackpatch = imcrop(image, (int)ceil(mypatch->x1*image->width), (int)floor(mypatch->y2*image->height - patch_size + 1), patch_size - 1);
-		//ÓÒÉÏ½Ç
+		//å³ä¸Šè§’
 		else if (mypatch->x2*image->width - patch_size + 1 >= 1 && mypatch->y2*image->height - patch_size + 1 >= 1)
 			blackpatch = imcrop(image, (int)floor(mypatch->x2*image->width - patch_size + 1), (int)floor(mypatch->y2*image->height - patch_size + 1), patch_size - 1);
-		else//Í¼Æ¬Ì«Ğ¡
+		else//å›¾ç‰‡å¤ªå°
 		{
 			free(screenData);
 			return;
@@ -278,8 +278,7 @@ void saveScreenShot(int clnHeight, int clnWidth, GLfloat angle)
 			to_string((long double)model_current + 1 + model_begin) + "_" +
 			to_string((long double)model->seed_current + 1) + ".bmp";
 
-		//cout << "What the hell" << endl;
-		WriteBitmapFile(patch_file.data(), patch_size, patch_size, (unsigned char*)blackpatch->dataOfBmp);
+		//WriteBitmapFile(patch_file.data(), patch_size, patch_size, (unsigned char*)blackpatch->dataOfBmp);
 		
 		patch_file = patch_path + "\\" + to_string((long double)view_current) + "\\" +
 			to_string((long double)model_current + 1 + model_begin) + "_" +
@@ -309,7 +308,7 @@ void saveScreenShot(int clnHeight, int clnWidth, GLfloat angle)
 		delete []blackpatch->dataOfBmp;
 		delete blackpatch;
 	}
-	//ÊÍ·ÅÄÚ´æ
+	//é‡Šæ”¾å†…å­˜
 	delete []image->dataOfBmp;
 	delete image;
 	delete mypatch;
